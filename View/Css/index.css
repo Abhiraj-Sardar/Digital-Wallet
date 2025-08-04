@@ -1,0 +1,14 @@
+.banner-container{
+    display: flex;
+}
+.banner-container .ban-left{
+    height:calc(50vh);
+    width:50%;
+    background-color: red;
+}
+
+.banner-container .ban-right{
+    height:calc(50vh);
+    width:50%;
+    background-color: yellow;
+}
