@@ -8,6 +8,7 @@
 <body>
     <?php
         include 'navbar.php';
+        
         require_once '../Model/db_connect.php';
         try {
             $pdo = new PDO($attr, $user, $pass, $opts);
@@ -16,16 +17,18 @@
         echo "Connection failed: " . $e->getMessage();
         }
 
-
         $stmnt = 'SELECT * FROM user';
-
         $result = $pdo->query($stmnt);
-
-        while ($row = $result->fetch()) {
+        $row = $result->fetch();
+    
         echo '<pre>';
         print_r($row);
         echo '</pre>';
-    }
+        
+        
     ?>
+    
+    <h1>Wallet Cash:<?php echo $row['amount'];?></h1>
+    <h1>Cryptos Buyed:</h1>
 </body>
 </html>
