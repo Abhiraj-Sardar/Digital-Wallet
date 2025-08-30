@@ -1,0 +1,42 @@
+body{
+    background-color: #4B4FED;
+}
+
+.analytic-container{
+    height:35vh;
+    /* background-color: red; */
+    display: flex;
+    align-items: center;
+}
+
+.analytic-container .wallet{
+    height:30vh;
+    width: 25rem;
+    background-color: rgb(250, 250, 250);
+    margin-left: 12px;
+    border-radius: 12px;
+}
+
+.analytic-container .wallet .left{
+    height:inherit;
+    width:40%;
+    /* background-color: rgb(154, 139, 139); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap:0;
+
+}
+
+.analytic-container .wallet .left .img-container{
+
+    height:100px;
+    width:6.5rem;
+    background-image: url("../img/wallet.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius:100%;
+    /* background-color: aliceblue; */
+
+}

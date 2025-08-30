@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #4B4FED;
             min-height: 100vh;
             color: #333;
         }
@@ -535,6 +535,8 @@
                 <div class="stat-label">Savings</div>
             </div>
         </div>
+
+        
 
         <div class="main-content">
             <div class="sidebar">
