@@ -1,5 +1,6 @@
 .banner-container{
     display: flex;
+    width: 100%;
 }
 .banner-container .ban-left{
     height:calc(50vh);

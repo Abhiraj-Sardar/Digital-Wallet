@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Responsive Navbar</title>
   <link rel="stylesheet" href="./Css/navbar.css" />
+  <style>
+    .navbar{
+       background-color: #4A4EED;
+    }
+    </style>
 </head>
 <body>
   <nav class="navbar">
