@@ -4,7 +4,7 @@ body{
 
 .analytic-container{
     height:35vh;
-    /* background-color: red; */
+    background-color: red;
     display: flex;
     align-items: center;
 }
@@ -38,5 +38,5 @@ body{
     background-repeat: no-repeat;
     border-radius:100%;
     /* background-color: aliceblue; */
-
 }
+

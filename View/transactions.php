@@ -3,9 +3,768 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Transaction History</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Summary Cards */
+        .summary-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .summary-card h3 {
+            color: #555;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .summary-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        /* Filters */
+        .filters-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .filters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .filter-group input, .filter-group select {
+            padding: 10px 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-group input:focus, .filter-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Transaction Table */
+        .transactions-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .transactions-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            min-width: 800px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th:first-child {
+            border-top-left-radius: 15px;
+        }
+
+        th:last-child {
+            border-top-right-radius: 15px;
+        }
+
+        td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #f1f3f4;
+            color: #555;
+            transition: background-color 0.2s ease;
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background-color: #f8f9ff;
+        }
+
+        .transaction-id {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .amount {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .amount.debit {
+            color: #e74c3c;
+        }
+
+        .amount.credit {
+            color: #27ae60;
+        }
+
+        .upi-id {
+            font-family: 'Courier New', monospace;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .pdf-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pdf-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .pdf-btn:active {
+            transform: scale(0.98);
+        }
+
+        .date-time {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .recipient {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .filters-container {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .transactions-section {
+                padding: 20px;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    
+    <?php
+        include "./navbar.php";
+    ?>
+    <div class="container">
+        <div class="header">
+            <h1>Transaction History</h1>
+            <p>Track all your payment transactions and generate detailed reports</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-container">
+            <div class="summary-card">
+                <h3>Total Transactions</h3>
+                <div class="value" id="totalTransactions">247</div>
+            </div>
+            <div class="summary-card">
+                <h3>Total Sent</h3>
+                <div class="value" id="totalSent">₹45,680</div>
+            </div>
+            <div class="summary-card">
+                <h3>Total Received</h3>
+                <div class="value" id="totalReceived">₹62,340</div>
+            </div>
+            <div class="summary-card">
+                <h3>Pending</h3>
+                <div class="value" id="pendingCount">3</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-section">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="dateFrom">From Date</label>
+                    <input type="date" id="dateFrom" name="dateFrom">
+                </div>
+                <div class="filter-group">
+                    <label for="dateTo">To Date</label>
+                    <input type="date" id="dateTo" name="dateTo">
+                </div>
+                <div class="filter-group">
+                    <label for="statusFilter">Status</label>
+                    <select id="statusFilter" name="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="success">Success</option>
+                        <option value="pending">Pending</option>
+                        <option value="failed">Failed</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="typeFilter">Type</label>
+                    <select id="typeFilter" name="typeFilter">
+                        <option value="">All Types</option>
+                        <option value="debit">Sent</option>
+                        <option value="credit">Received</option>
+                    </select>
+                </div>
+                <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
+            </div>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="transactions-section">
+            <h2>Transaction Details</h2>
+            <div class="table-container">
+                <table id="transactionsTable">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Date & Time</th>
+                            <th>UPI ID</th>
+                            <th>Amount</th>
+                            <th>To/From</th>
+                            <th>Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsBody">
+                        <!-- Transactions will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample transaction data
+        let transactions = [
+            {
+                id: 'TXN001',
+                date: '2025-09-05',
+                time: '14:30:25',
+                upiId: 'john@paytm',
+                amount: 2500,
+                type: 'debit',
+                recipient: 'Jane Smith',
+                recipientUpi: 'jane@googlepay',
+                status: 'success',
+                description: 'Payment for dinner',
+                bankRef: 'BNK123456789'
+            },
+            {
+                id: 'TXN002',
+                date: '2025-09-05',
+                time: '12:15:10',
+                upiId: 'mike@phonepe',
+                amount: 5000,
+                type: 'credit',
+                recipient: 'Mike Johnson',
+                recipientUpi: 'john@paytm',
+                status: 'success',
+                description: 'Salary advance',
+                bankRef: 'BNK987654321'
+            },
+            {
+                id: 'TXN003',
+                date: '2025-09-04',
+                time: '18:45:33',
+                upiId: 'john@paytm',
+                amount: 1200,
+                type: 'debit',
+                recipient: 'Sarah Wilson',
+                recipientUpi: 'sarah@paytm',
+                status: 'pending',
+                description: 'Book purchase',
+                bankRef: 'BNK456789123'
+            },
+            {
+                id: 'TXN004',
+                date: '2025-09-04',
+                time: '16:22:17',
+                upiId: 'david@googlepay',
+                amount: 750,
+                type: 'credit',
+                recipient: 'David Brown',
+                recipientUpi: 'john@paytm',
+                status: 'success',
+                description: 'Refund for movie ticket',
+                bankRef: 'BNK789123456'
+            },
+            {
+                id: 'TXN005',
+                date: '2025-09-03',
+                time: '10:30:45',
+                upiId: 'john@paytm',
+                amount: 3500,
+                type: 'debit',
+                recipient: 'Electric Company',
+                recipientUpi: 'electricity@gov',
+                status: 'failed',
+                description: 'Electricity bill payment',
+                bankRef: 'BNK321654987'
+            },
+            {
+                id: 'TXN006',
+                date: '2025-09-03',
+                time: '09:15:22',
+                upiId: 'amy@phonepe',
+                amount: 8900,
+                type: 'credit',
+                recipient: 'Amy Davis',
+                recipientUpi: 'john@paytm',
+                status: 'success',
+                description: 'Freelance payment',
+                bankRef: 'BNK654987321'
+            },
+            {
+                id: 'TXN007',
+                date: '2025-09-02',
+                time: '20:11:08',
+                upiId: 'john@paytm',
+                amount: 450,
+                type: 'debit',
+                recipient: 'Food Delivery',
+                recipientUpi: 'food@zomato',
+                status: 'success',
+                description: 'Dinner order',
+                bankRef: 'BNK147258369'
+            },
+            {
+                id: 'TXN008',
+                date: '2025-09-02',
+                time: '15:40:55',
+                upiId: 'john@paytm',
+                amount: 1500,
+                type: 'debit',
+                recipient: 'Tom Wilson',
+                recipientUpi: 'tom@paytm',
+                status: 'pending',
+                description: 'Birthday gift',
+                bankRef: 'BNK258369147'
+            }
+        ];
+
+        let filteredTransactions = [...transactions];
+
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Format date and time
+        function formatDateTime(date, time) {
+            const dateObj = new Date(date + 'T' + time);
+            return {
+                date: dateObj.toLocaleDateString('en-IN'),
+                time: dateObj.toLocaleTimeString('en-IN', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                })
+            };
+        }
+
+        // Update summary cards
+        function updateSummary() {
+            const totalTransactions = filteredTransactions.length;
+            const totalSent = filteredTransactions
+                .filter(t => t.type === 'debit' && t.status === 'success')
+                .reduce((sum, t) => sum + t.amount, 0);
+            const totalReceived = filteredTransactions
+                .filter(t => t.type === 'credit' && t.status === 'success')
+                .reduce((sum, t) => sum + t.amount, 0);
+            const pendingCount = filteredTransactions
+                .filter(t => t.status === 'pending').length;
+
+            document.getElementById('totalTransactions').textContent = totalTransactions;
+            document.getElementById('totalSent').textContent = formatCurrency(totalSent);
+            document.getElementById('totalReceived').textContent = formatCurrency(totalReceived);
+            document.getElementById('pendingCount').textContent = pendingCount;
+        }
+
+        // Populate transactions table
+        function populateTransactions() {
+            const tbody = document.getElementById('transactionsBody');
+            tbody.innerHTML = '';
+
+            if (filteredTransactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="no-results">No transactions found matching your criteria</td></tr>';
+                return;
+            }
+
+            filteredTransactions.forEach(transaction => {
+                const datetime = formatDateTime(transaction.date, transaction.time);
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td class="transaction-id">${transaction.id}</td>
+                    <td>
+                        <div>${datetime.date}</div>
+                        <div class="date-time">${datetime.time}</div>
+                    </td>
+                    <td class="upi-id">${transaction.upiId}</td>
+                    <td class="amount ${transaction.type}">
+                        ${transaction.type === 'debit' ? '-' : '+'}${formatCurrency(transaction.amount)}
+                    </td>
+                    <td>
+                        <div class="recipient">${transaction.recipient}</div>
+                        <div class="upi-id">${transaction.recipientUpi}</div>
+                    </td>
+                    <td><span class="status ${transaction.status}">${transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}</span></td>
+                    <td>
+                        <button class="pdf-btn" onclick="generatePDF('${transaction.id}')">
+                            📄 PDF
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+
+            filteredTransactions = transactions.filter(transaction => {
+                // Date filter
+                if (dateFrom && transaction.date < dateFrom) return false;
+                if (dateTo && transaction.date > dateTo) return false;
+                
+                // Status filter
+                if (statusFilter && transaction.status !== statusFilter) return false;
+                
+                // Type filter
+                if (typeFilter && transaction.type !== typeFilter) return false;
+                
+                return true;
+            });
+
+            populateTransactions();
+            updateSummary();
+        }
+
+        // Generate PDF for transaction
+        function generatePDF(transactionId) {
+            const transaction = transactions.find(t => t.id === transactionId);
+            if (!transaction) return;
+
+            // Show loading state
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<div class="loading"></div> Generating...';
+            button.disabled = true;
+
+            // Create PDF after a short delay to show loading animation
+            setTimeout(() => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                // Set up the document
+                doc.setFontSize(20);
+                doc.setTextColor(102, 126, 234);
+                doc.text('Transaction Receipt', 105, 30, { align: 'center' });
+
+                // Add a line
+                doc.setLineWidth(0.5);
+                doc.setDrawColor(102, 126, 234);
+                doc.line(20, 35, 190, 35);
+
+                // Transaction details
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+
+                const datetime = formatDateTime(transaction.date, transaction.time);
+                
+                let y = 55;
+                const leftColumn = 30;
+                const rightColumn = 110;
+
+                // Left column
+                doc.setFont(undefined, 'bold');
+                doc.text('Transaction Details:', leftColumn, y);
+                y += 10;
+
+                doc.setFont(undefined, 'normal');
+                doc.text(`Transaction ID: ${transaction.id}`, leftColumn, y);
+                y += 8;
+                doc.text(`Date: ${datetime.date}`, leftColumn, y);
+                y += 8;
+                doc.text(`Time: ${datetime.time}`, leftColumn, y);
+                y += 8;
+                doc.text(`Status: ${transaction.status.toUpperCase()}`, leftColumn, y);
+                y += 8;
+                doc.text(`Bank Reference: ${transaction.bankRef}`, leftColumn, y);
+
+                // Right column
+                y = 65;
+                doc.setFont(undefined, 'bold');
+                doc.text('Payment Information:', rightColumn, y);
+                y += 10;
+
+                doc.setFont(undefined, 'normal');
+                doc.text(`Amount: ${transaction.type === 'debit' ? '-' : '+'}${formatCurrency(transaction.amount)}`, rightColumn, y);
+                y += 8;
+                doc.text(`Type: ${transaction.type === 'debit' ? 'Payment Sent' : 'Payment Received'}`, rightColumn, y);
+                y += 8;
+                doc.text(`From UPI: ${transaction.upiId}`, rightColumn, y);
+                y += 8;
+                doc.text(`To UPI: ${transaction.recipientUpi}`, rightColumn, y);
+
+                // Description section
+                y += 20;
+                doc.setFont(undefined, 'bold');
+                doc.text('Description:', leftColumn, y);
+                y += 8;
+                doc.setFont(undefined, 'normal');
+                doc.text(transaction.description, leftColumn, y);
+
+                // Recipient section
+                y += 15;
+                doc.setFont(undefined, 'bold');
+                doc.text(`${transaction.type === 'debit' ? 'Paid To:' : 'Received From:'}`, leftColumn, y);
+                y += 8;
+                doc.setFont(undefined, 'normal');
+                doc.text(transaction.recipient, leftColumn, y);
+
+                // Footer
+                y = 250;
+                doc.setLineWidth(0.3);
+                doc.line(20, y, 190, y);
+                y += 10;
+                doc.setFontSize(10);
+                doc.setTextColor(128, 128, 128);
+                doc.text('This is a system-generated receipt. No signature required.', 105, y, { align: 'center' });
+                y += 6;
+                doc.text(`Generated on: ${new Date().toLocaleString('en-IN')}`, 105, y, { align: 'center' });
+
+                // Add transaction status indicator
+                if (transaction.status === 'success') {
+                    doc.setTextColor(46, 204, 113);
+                    doc.setFontSize(14);
+                    doc.text('✓ SUCCESSFUL', 105, 200, { align: 'center' });
+                } else if (transaction.status === 'pending') {
+                    doc.setTextColor(241, 196, 15);
+                    doc.setFontSize(14);
+                    doc.text('⏳ PENDING', 105, 200, { align: 'center' });
+                } else if (transaction.status === 'failed') {
+                    doc.setTextColor(231, 76, 60);
+                    doc.setFontSize(14);
+                    doc.text('✗ FAILED', 105, 200, { align: 'center' });
+                }
+
+                // Save the PDF
+                doc.save(`Transaction_${transactionId}_Receipt.pdf`);
+
+                // Reset button state
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 1000);
+        }
+
+        // Initialize the page
+        function init() {
+            // Set default date range (last 30 days)
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+            
+            document.getElementById('dateTo').value = today.toISOString().split('T')[0];
+            document.getElementById('dateFrom').value = thirtyDaysAgo.toISOString().split('T')[0];
+
+            populateTransactions();
+            updateSummary();
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', init);
+    </script>
 </body>
 </html>

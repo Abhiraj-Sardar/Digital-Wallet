@@ -12,11 +12,11 @@
         session_start();
         $sender_id=$_SESSION['sender_id'];
         $amount=$_POST['amount'];
-        $receiver_id=$_POST['id'];
+        $receiver_id=$_POST['userId'];
 
         try {
             $pdo = new PDO($attr, $user, $pass, $opts);
-            echo "Connection successfull..";
+            // echo "Connection successfull..";
         } catch (PDOException $e) {
         echo "Connection failed: " . $e->getMessage();
         }    
