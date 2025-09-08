@@ -5,20 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Responsive Navbar</title>
   <link rel="stylesheet" href="./Css/navbar.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     .navbar{
        background-color: #4A4EED;
+       border-radius:10px;
+
     }
+  
     </style>
 </head>
 <body>
   <nav class="navbar">
     <div class="logo">MySite</div>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="#">Contact</a></li>
+      <li><a href="index.php">Home</a></li>
+      <li><a href="#">Developer Info</a></li>
+      <li><a href="#"><i class="fa-brands fa-github"></i></a></li>
+      <li><a href="login.php">
+      <?php 
+      if(isset($_SESSION['name'])){
+        echo $_SESSION['name'];
+      }else{
+        echo "Login";
+      }?></a></li>
+      <li><a href="SignUp.php">Sign Up</a></li>
     </ul>
     <div class="hamburger" id="hamburger">
       ☰

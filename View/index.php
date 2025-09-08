@@ -428,7 +428,7 @@
 </head>
 <body>
     <!-- Header -->
-    <header>
+    <!-- <header>
         <nav class="container">
             <div class="logo">PayFlow</div>
             <ul class="nav-links">
@@ -439,7 +439,11 @@
             </ul>
             <a href="#" class="cta-button">Get Started</a>
         </nav>
-    </header>
+    </header> -->
+
+    <?php
+        include "./navbar.php";
+    ?>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
