@@ -293,8 +293,9 @@
 <body>
     <?php
         include "./navbar.php";
-        $_SESSION['sender_id']=1; //profile user id
         require_once '../Model/db_connect.php';
+        $_SESSION['sender_id']=1; //profile user id
+       
         try {
                 $pdo = new PDO($attr, $user, $pass, $opts);
             //  echo "Connection successfull..";

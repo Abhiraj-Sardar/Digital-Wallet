@@ -24,12 +24,23 @@
       <li><a href="#"><i class="fa-brands fa-github"></i></a></li>
       <li><a href="login.php">
       <?php 
-      if(isset($_SESSION['name'])){
-        echo $_SESSION['name'];
+      if(isset($_SESSION['uname'])){
+        echo $_SESSION['uname'];
       }else{
         echo "Login";
       }?></a></li>
-      <li><a href="SignUp.php">Sign Up</a></li>
+
+      <?php
+        if(isset($_SESSION['uname'])){
+          echo "<li><a href='index.php'>Log out</a></li>";
+        }
+        else{
+            echo "<li><a href='SignUp.php'>Sign Up</a></li>";
+        }
+      ?>
+      
+      
+      
     </ul>
     <div class="hamburger" id="hamburger">
       ☰

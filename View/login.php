@@ -25,16 +25,16 @@
             <div id="errorMessage" class="error-message"></div>
             <div id="successMessage" class="success-message"></div>
 
-            <form id="loginForm" onsubmit="handleLogin(event)">
+            <form action='../Controller/login_handler.php' method='post' id="loginForm">
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" placeholder="Enter your email" required autocomplete="email">
+                    <input type="email" name='uemail' id="email" placeholder="Enter your email" required autocomplete="email">
                     <span class="input-icon">📧</span>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                    <input type="password" name='upass' id="password" placeholder="Enter your password" required autocomplete="current-password">
                     <span class="input-icon">🔒</span>
                     <span class="password-toggle" onclick="togglePassword()">👁️</span>
                 </div>
@@ -45,7 +45,7 @@
                 </div>
 
                 <button type="submit" class="login-btn" id="loginBtn">
-                    Sign In Securely
+                    Sign In 
                     <div class="spinner"></div>
                 </button>
             </form>
@@ -278,40 +278,6 @@
         }
 
         // Form handlers
-        function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
-            const errorDiv = document.getElementById('errorMessage');
-            const successDiv = document.getElementById('successMessage');
-
-            // Clear previous messages
-            errorDiv.style.display = 'none';
-            successDiv.style.display = 'none';
-
-            // Show loading state
-            loginBtn.classList.add('loading');
-
-            // Simulate API call
-            setTimeout(() => {
-                loginBtn.classList.remove('loading');
-
-                // Demo validation
-                if (email === 'demo@payflow.com' && password === 'demo123') {
-                    successDiv.textContent = 'Login successful! Redirecting to dashboard...';
-                    successDiv.style.display = 'block';
-                    
-                    setTimeout(() => {
-                        // In a real app, this would redirect to the dashboard
-                        showMessage('🎉 Welcome to PayFlow! Redirecting to dashboard...', 'success');
-                    }, 1500);
-                } else {
-                    errorDiv.textContent = 'Invalid credentials. Try demo@payflow.com / demo123';
-                    errorDiv.style.display = 'block';
-                }
-            }, 1500);
-        }
 
         function handleSignup(event) {
             event.preventDefault();

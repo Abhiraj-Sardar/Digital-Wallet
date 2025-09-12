@@ -1,3 +1,5 @@
+<?php session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -507,19 +509,23 @@
 <body>
     <?php
        include "./navbar.php";
+       $uname=$_SESSION['uname'];
+       $amt=$_SESSION['amt'];
     ?>
     <div class="container">
         <header class="header">
             <div class="logo">💳 PayFlow</div>
             <div class="user-info">
-                <span>Welcome back, John!</span>
+                <span>Welcome back, <?php
+                    echo $uname;
+                ?></span>
                 <div class="user-avatar">JD</div>
             </div>
         </header>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-value" id="totalBalance">$12,450.32</div>
+                <div class="stat-value" id="totalBalance"><?php echo '₹'.$amt; ?></div>
                 <div class="stat-label">Total Balance</div>
             </div>
             <div class="stat-card">
@@ -531,8 +537,8 @@
                 <div class="stat-label">Transactions</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="savedAmount">$890.15</div>
-                <div class="stat-label">Savings</div>
+                <div class="stat-value" id="savedAmount"> Share & Earn</div>
+                <div class="stat-label">Referral</div>
             </div>
         </div>
 
