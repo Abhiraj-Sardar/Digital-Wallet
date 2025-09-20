@@ -514,31 +514,36 @@
     ?>
     <div class="container">
         <header class="header">
-            <div class="logo">💳 PayFlow</div>
+            <div class="logo"><i class="fa-brands fa-bitcoin" style="color: #FFD43B;"></i> PayGo Coin</div>
             <div class="user-info">
                 <span>Welcome back, <?php
                     echo $uname;
                 ?></span>
-                <div class="user-avatar">JD</div>
+                <div class="user-avatar"><i class="fa-solid fa-user"> </i></div>
             </div>
         </header>
 
         <div class="stats-grid">
             <div class="stat-card">
+                <i class="fa-solid fa-coins coin" style="color: #FFD43B; font-size:32px;"></i>
                 <div class="stat-value" id="totalBalance"><?php echo '₹'.$amt; ?></div>
-                <div class="stat-label">Total Balance</div>
+                <div class="stat-label">Total PayGo Coins</div>
             </div>
             <div class="stat-card">
+                <i class="fa-solid fa-calendar" style="color: #ff6b6b; font-size:32px;"></i>
                 <div class="stat-value" id="monthlySpending">$2,384.50</div>
                 <div class="stat-label">This Month</div>
             </div>
             <div class="stat-card">
+                <i class="fa-solid fa-receipt" style="color: #63E6BE;font-size:32px;"></i>
                 <div class="stat-value" id="totalTransactions">47</div>
                 <div class="stat-label">Transactions</div>
             </div>
             <div class="stat-card">
+                <i class="fa-solid fa-share-from-square" style="color: #b0b2b5;font-size:32px;"></i>
                 <div class="stat-value" id="savedAmount"> Share & Earn</div>
-                <div class="stat-label">Referral</div>
+                <h3><i><?php echo $_SESSION['uid']; ?></i></h3>
+                <div class="stat-label">Referral Code</div>
             </div>
         </div>
 
@@ -565,13 +570,13 @@
                             <li class="nav-item">
                                 <a href="#" class="nav-link" data-section="cards">
                                     <span class="nav-icon">💳</span>
-                                    My Cards
+                                    Buy Crypto Coins
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link" data-section="analytics">
                                     <span class="nav-icon">📈</span>
-                                    Analytics
+                                    History
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -584,14 +589,6 @@
                     </nav>
                 </div>
 
-                <div class="card balance-card">
-                    <div class="balance-label">Available Balance</div>
-                    <div class="balance-amount">$8,234.67</div>
-                    <div class="quick-actions">
-                        <button class="btn btn-primary" onclick="openModal('sendMoney')">Send</button>
-                        <button class="btn btn-primary" onclick="openModal('requestMoney')">Request</button>
-                    </div>
-                </div>
             </div>
 
             <div class="main-panel">
@@ -683,18 +680,6 @@
             </div>
         </div>
 
-        <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="color: #333;">Quick Actions</h3>
-                <button class="btn btn-success" onclick="openModal('sendMoney')">New Transaction</button>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <button class="btn btn-success" onclick="openModal('sendMoney')">Send Money</button>
-                <button class="btn btn-primary" onclick="openModal('requestMoney')" style="background: #667eea; color: white;">Request Money</button>
-                <button class="btn btn-primary" onclick="openModal('addCard')" style="background: #764ba2; color: white;">Add Card</button>
-                <button class="btn btn-danger" onclick="showNotification('Bills reminder set!')">Pay Bills</button>
-            </div>
-        </div>
     </div>
 
     <!-- Send Money Modal -->

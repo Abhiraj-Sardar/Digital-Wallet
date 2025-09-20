@@ -8,20 +8,19 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     .navbar{
-       background-color: #4A4EED;
+       background-color: #4B4FED;
        border-radius:10px;
-
+       /* border:2px solid black; */
     }
-  
     </style>
 </head>
 <body>
   <nav class="navbar">
-    <div class="logo">MySite</div>
+    <div class="logo"><img src="./img/logo.png" height='50' width='50'/> PayGo</div>
     <ul class="nav-links" id="navLinks">
       <li><a href="index.php">Home</a></li>
       <li><a href="#">Developer Info</a></li>
-      <li><a href="#"><i class="fa-brands fa-github"></i></a></li>
+      <li><a href="#"><i class="fa-brands fa-github" style="font-size:25px";></i></a></li>
       <li><a href="login.php">
       <?php 
       if(isset($_SESSION['uname'])){
