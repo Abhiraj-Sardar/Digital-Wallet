@@ -1,3 +1,7 @@
+<?php session_start(); 
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +18,10 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #4B4FED;
             min-height: 100vh;
-            padding: 20px;
+            /* padding: 20px; */
+            overflow-x:auto;
         }
 
         .container {
@@ -164,11 +169,11 @@
             width: 100%;
             border-collapse: collapse;
             background: white;
-            min-width: 800px;
+            min-width: 800;
         }
 
         th {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background-color:#1B1A39;
             color: white;
             padding: 15px 12px;
             text-align: left;
@@ -314,6 +319,16 @@
             }
         }
 
+        .fa-spinner{
+            animation: spin 2s infinite;
+        }
+
+        @keyframes spin {
+            0%{
+                transform: rotateX(30deg);
+            }
+        }
+
         /* Loading Animation */
         .loading {
             display: inline-block;
@@ -345,19 +360,22 @@
         <div class="summary-container">
             <div class="summary-card">
                 <h3>Total Transactions</h3>
-                <div class="value" id="totalTransactions">247</div>
+                <i class="fa-solid fa-receipt" style="color: #63E6BE;font-size:32px;"></i><div class="value" id="totalTransactions" style='display:inline;'>7</div>
             </div>
             <div class="summary-card">
                 <h3>Total Sent</h3>
-                <div class="value" id="totalSent">₹45,680</div>
+                <i class="fa-regular fa-paper-plane" style="color: #74C0FC;font-size:32px;"></i>
+                <div class="value" id="totalSent" style='display:inline;'>₹45,680</div>
             </div>
             <div class="summary-card">
                 <h3>Total Received</h3>
-                <div class="value" id="totalReceived">₹62,340</div>
+                <i class="fa-solid fa-thumbs-up" style="color: #B197FC;font-size:32px;"></i>
+                <div class="value" id="totalReceived" style='display:inline;'>₹62,340</div>
             </div>
             <div class="summary-card">
                 <h3>Pending</h3>
-                <div class="value" id="pendingCount">3</div>
+                <i class="fa-solid fa-spinner" style="color: #c2330f;font-size:32px;"></i>
+                <div class="value" id="pendingCount" style='display:inline;'>3</div>
             </div>
         </div>
 

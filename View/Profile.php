@@ -396,6 +396,16 @@
             border-color: #667eea;
         }
 
+        .coin{
+            animation: flip 2s infinite;
+        }
+
+        @keyframes flip {
+            0%{
+                transform: rotateY(360deg);
+            }
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -514,7 +524,7 @@
     ?>
     <div class="container">
         <header class="header">
-            <div class="logo"><i class="fa-brands fa-bitcoin" style="color: #FFD43B;"></i> PayGo Coin</div>
+            <div class="logo"><i class="fa-brands fa-bitcoin coin" style="color: #FFD43B;"></i> PayGo Coin</div>
             <div class="user-info">
                 <span>Welcome back, <?php
                     echo $uname;
@@ -525,7 +535,7 @@
 
         <div class="stats-grid">
             <div class="stat-card">
-                <i class="fa-solid fa-coins coin" style="color: #FFD43B; font-size:32px;"></i>
+                <i class="fa-solid fa-coins" style="color: #FFD43B; font-size:32px;"></i>
                 <div class="stat-value" id="totalBalance"><?php echo '₹'.$amt; ?></div>
                 <div class="stat-label">Total PayGo Coins</div>
             </div>
@@ -562,27 +572,27 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link" data-section="transactions">
+                                <a href="../Controller/page_optimizer.php?src=transactions" class="nav-link" data-section="transactions">
                                     <span class="nav-icon">💸</span>
                                     Transactions
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link" data-section="cards">
+                                <a href="../Controller/page_optimizer.php?src=crypto" class="nav-link" data-section="cards">
                                     <span class="nav-icon">💳</span>
                                     Buy Crypto Coins
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link" data-section="analytics">
+                                <a href="../Controller/page_optimizer.php?src=shareMoney" class="nav-link" data-section="analytics">
                                     <span class="nav-icon">📈</span>
-                                    History
+                                    Share Money
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link" data-section="settings">
                                     <span class="nav-icon">⚙️</span>
-                                    Settings
+                                    History
                                 </a>
                             </li>
                         </ul>

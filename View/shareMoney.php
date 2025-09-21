@@ -1,3 +1,4 @@
+<?php session_start();?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +16,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color:  #4A4EED;
             min-height: 100vh;
-            padding: 20px;
+            /* padding: 20px; */
         }
 
         .container {
@@ -198,7 +199,7 @@
         }
 
         th {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background-color: #1B1A39;
             color: white;
             padding: 15px 12px;
             text-align: left;
@@ -257,6 +258,10 @@
             background: #fff3cd;
             color: #856404;
         }
+        
+        .coin{
+            animation: flip 2s infinite;
+        }
 
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -274,6 +279,12 @@
 
             .stat-card .value {
                 font-size: 1.8rem;
+            }
+        }
+
+        @keyframes flip {
+            0%{
+                transform: rotateY(360deg);
             }
         }
 
@@ -295,6 +306,7 @@
         include "./navbar.php";
         require_once '../Model/db_connect.php';
         $_SESSION['sender_id']=1; //profile user id
+        $uemail=$_SESSION['uemail'];
        
         try {
                 $pdo = new PDO($attr, $user, $pass, $opts);
@@ -316,23 +328,27 @@
         <!-- Dashboard Cards -->
         <div class="stats-container">
             <div class="stat-card">
-                <h3>Wallet Cash</h3>
-                <div class="value" id="walletCash">₹ <?php echo $ui['amount'];?> </div>
+                <h3>PayGo Coin</h3>
+                <i class="fa-brands fa-bitcoin coin" style="color: #FFD43B; font-size:32px;"></i>
+                <div class="value" id="walletCash" style='display:inline;'>₹ <?php echo $ui['amount'];?> </div>
                 <div class="change">+5.2% from last month</div>
             </div>
             <div class="stat-card">
                 <h3>Total Transactions</h3>
-                <div class="value" id="totalTransactions">1,247</div>
+                <i class="fa-solid fa-receipt" style="color: #B197FC;font-size:32px; margin-right:10px;"></i>
+                <div class="value" id="totalTransactions" style='display:inline;'>1,247</div>
                 <div class="change">+12 today</div>
             </div>
             <div class="stat-card">
                 <h3>Active Users</h3>
-                <div class="value" id="activeUsers">89</div>
+                <i class="fa-solid fa-users" style="color: #1fe02c; font-size:32px; margin-right:10px;"></i>
+                <div class="value" id="activeUsers" style='display:inline;'>89</div>
                 <div class="change">+3 this week</div>
             </div>
             <div class="stat-card">
                 <h3>Success Rate</h3>
-                <div class="value" id="successRate">98.5%</div>
+                <i class="fa-solid fa-circle-check" style="color: #63E6BE;font-size:32px; margin-right:10px;"></i>
+                <div class="value" id="successRate" style='display:inline;'>98.5%</div>
                 <div class="change">+0.3% improved</div>
             </div>
         </div>
@@ -370,7 +386,7 @@
                     </thead>
                     <tbody>
                         <?php 
-                             $rs = "select * from user";
+                             $rs = "select * from user where email NOT LIKE '$uemail'";
                              $result = $pdo->query($rs);
                         ?>
                         

@@ -12,6 +12,14 @@
        border-radius:10px;
        /* border:2px solid black; */
     }
+
+    .btn{
+      padding:5px 7px;
+      border-radius:10px;
+      background-color:red;
+      color:white;
+      cursor:pointer;
+    }
     </style>
 </head>
 <body>
@@ -21,17 +29,17 @@
       <li><a href="index.php">Home</a></li>
       <li><a href="#">Developer Info</a></li>
       <li><a href="#"><i class="fa-brands fa-github" style="font-size:25px";></i></a></li>
-      <li><a href="login.php">
+      <li>
       <?php 
       if(isset($_SESSION['uname'])){
-        echo $_SESSION['uname'];
+        echo "<a href='profile.php'>".$_SESSION['uname']."</a>";
       }else{
-        echo "Login";
-      }?></a></li>
+        echo "<a href='login.php'>Login</a>";
+      }?></li>
 
       <?php
         if(isset($_SESSION['uname'])){
-          echo "<li><a href='index.php'>Log out</a></li>";
+          echo "<li><a href='../Controller/logout_handler.php'><button class='btn'>Log out</button></a></li>";
         }
         else{
             echo "<li><a href='SignUp.php'>Sign Up</a></li>";
