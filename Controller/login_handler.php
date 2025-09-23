@@ -1,3 +1,4 @@
+<?php session_start();?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +9,7 @@
 <body>
     <?php
         require_once '../Model/db_connect.php';
-        session_start();
+        
         $uemail=$_POST['uemail'];
         $upass=$_POST['upass'];
 

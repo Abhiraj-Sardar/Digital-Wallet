@@ -350,6 +350,32 @@
     <?php
         include "./navbar.php";
     ?>
+
+    <?php 
+            require "../Model/db_connect.php";
+            $sid=$_SESSION['uid'];
+            try{
+                $pdo = new PDO($attr, $user, $pass, $opts);
+            }
+            catch (PDOException $e) {
+                echo "Connection failed: " . $e->getMessage();
+            }    
+
+            $ts = "select * from transactions where sid like '$sid' or rid like '$sid'";
+            $ts_result = $pdo->query($ts);
+            
+            $ts4= "select count(*) as count from transactions where sid like '$sid' or rid like '$sid'";
+            $ts4_result = $pdo->query($ts4);
+            $ts4_row = $ts4_result->fetch();
+
+            $ts5= "select sum(amount) as ts_send from transactions where sid like '$sid' and status=1";
+            $ts5_result = $pdo->query($ts5);
+            $ts5_row = $ts5_result->fetch();
+
+            $ts6= "select sum(amount) as ts_receive from transactions where rid like '$sid' and status=0";
+            $ts6_result = $pdo->query($ts6);
+            $ts6_row = $ts6_result->fetch();
+        ?>
     <div class="container">
         <div class="header">
             <h1>Transaction History</h1>
@@ -360,17 +386,17 @@
         <div class="summary-container">
             <div class="summary-card">
                 <h3>Total Transactions</h3>
-                <i class="fa-solid fa-receipt" style="color: #63E6BE;font-size:32px;"></i><div class="value" id="totalTransactions" style='display:inline;'>7</div>
+                <i class="fa-solid fa-receipt" style="color: #63E6BE;font-size:32px;"></i><div class="value" id="totalTransactions" style='display:inline;'><?php echo $ts4_row['count']?></div>
             </div>
             <div class="summary-card">
                 <h3>Total Sent</h3>
                 <i class="fa-regular fa-paper-plane" style="color: #74C0FC;font-size:32px;"></i>
-                <div class="value" id="totalSent" style='display:inline;'>₹45,680</div>
+                <div class="value" id="totalSent" style='display:inline;'>$<?php echo $ts5_row['ts_send'];?></div>
             </div>
             <div class="summary-card">
                 <h3>Total Received</h3>
                 <i class="fa-solid fa-thumbs-up" style="color: #B197FC;font-size:32px;"></i>
-                <div class="value" id="totalReceived" style='display:inline;'>₹62,340</div>
+                <div class="value" id="totalReceived" style='display:inline;'>$<?php echo $ts6_row['ts_receive'];?></div>
             </div>
             <div class="summary-card">
                 <h3>Pending</h3>
@@ -411,6 +437,8 @@
             </div>
         </div>
 
+        
+
         <!-- Transactions Table -->
         <div class="transactions-section">
             <h2>Transaction Details</h2>
@@ -428,7 +456,59 @@
                         </tr>
                     </thead>
                     <tbody id="transactionsBody">
-                        <!-- Transactions will be populated here -->
+                        <?php 
+                            while($ts_row = $ts_result->fetch()){
+                                echo "<tr id='ttable'>";
+                                echo "<td id='tid'>TXXN".$ts_row['trans_id']."</td>";
+                                echo "<td id='tdate'>".$ts_row['t_date']."</td>";
+                               
+                                if($ts_row['status']==1){
+                                    echo "<td id='upi'>".$ts_row['rid']."</td>";
+                                }else{
+                                    echo "<td id='upi'>".$ts_row['sid']."</td>";
+                                }
+                                
+                                if($ts_row['status']==1){
+                                    echo "<td id='amt' style='color:red;'><b>-".$ts_row['amount']."</b></td>";
+                                }else{
+                                    echo "<td id='amt' style='color:green;'><b> +".$ts_row['amount']."</b></td>";
+                                }
+                                
+                                $rid=$ts_row['rid'];
+                                $sid=$ts_row['sid'];
+
+                                if($ts_row['status']==1){
+                                    $ts2 = "select name from user where id like '$rid'";
+                                    $ts_result2=$pdo->query($ts2);
+                                    $ts_row2 = $ts_result2->fetch();
+                                    echo "<td>".$ts_row2['name']."</td>";
+                                }else{
+                                    $ts3 = "select name from user where id like '$sid'";
+                                    $ts_result3=$pdo->query($ts3);
+                                    $ts_row3 = $ts_result3->fetch();
+                                    echo "<td>".$ts_row3['name']."</td>";
+                                }
+                                
+
+                                if($ts_row['status']==1){
+                                    echo "<td id='status'>Send</td>";
+                                }else{
+                                    echo "<td id='status'>Received</td>";
+                                }
+
+                                echo "<td>
+                                        <button class='pdf-btn' onclick='generatePDF()'>
+                                            📄 PDF
+                                        </button>
+                                     </td>";
+                                
+                                echo "</tr>";
+                            }
+                        ?>
+                        
+                            
+                            
+                        
                     </tbody>
                 </table>
             </div>
@@ -438,134 +518,134 @@
     <script>
         // Sample transaction data
         let transactions = [
-            {
-                id: 'TXN001',
-                date: '2025-09-05',
-                time: '14:30:25',
-                upiId: 'john@paytm',
-                amount: 2500,
-                type: 'debit',
-                recipient: 'Jane Smith',
-                recipientUpi: 'jane@googlepay',
-                status: 'success',
-                description: 'Payment for dinner',
-                bankRef: 'BNK123456789'
-            },
-            {
-                id: 'TXN002',
-                date: '2025-09-05',
-                time: '12:15:10',
-                upiId: 'mike@phonepe',
-                amount: 5000,
-                type: 'credit',
-                recipient: 'Mike Johnson',
-                recipientUpi: 'john@paytm',
-                status: 'success',
-                description: 'Salary advance',
-                bankRef: 'BNK987654321'
-            },
-            {
-                id: 'TXN003',
-                date: '2025-09-04',
-                time: '18:45:33',
-                upiId: 'john@paytm',
-                amount: 1200,
-                type: 'debit',
-                recipient: 'Sarah Wilson',
-                recipientUpi: 'sarah@paytm',
-                status: 'pending',
-                description: 'Book purchase',
-                bankRef: 'BNK456789123'
-            },
-            {
-                id: 'TXN004',
-                date: '2025-09-04',
-                time: '16:22:17',
-                upiId: 'david@googlepay',
-                amount: 750,
-                type: 'credit',
-                recipient: 'David Brown',
-                recipientUpi: 'john@paytm',
-                status: 'success',
-                description: 'Refund for movie ticket',
-                bankRef: 'BNK789123456'
-            },
-            {
-                id: 'TXN005',
-                date: '2025-09-03',
-                time: '10:30:45',
-                upiId: 'john@paytm',
-                amount: 3500,
-                type: 'debit',
-                recipient: 'Electric Company',
-                recipientUpi: 'electricity@gov',
-                status: 'failed',
-                description: 'Electricity bill payment',
-                bankRef: 'BNK321654987'
-            },
-            {
-                id: 'TXN006',
-                date: '2025-09-03',
-                time: '09:15:22',
-                upiId: 'amy@phonepe',
-                amount: 8900,
-                type: 'credit',
-                recipient: 'Amy Davis',
-                recipientUpi: 'john@paytm',
-                status: 'success',
-                description: 'Freelance payment',
-                bankRef: 'BNK654987321'
-            },
-            {
-                id: 'TXN007',
-                date: '2025-09-02',
-                time: '20:11:08',
-                upiId: 'john@paytm',
-                amount: 450,
-                type: 'debit',
-                recipient: 'Food Delivery',
-                recipientUpi: 'food@zomato',
-                status: 'success',
-                description: 'Dinner order',
-                bankRef: 'BNK147258369'
-            },
-            {
-                id: 'TXN008',
-                date: '2025-09-02',
-                time: '15:40:55',
-                upiId: 'john@paytm',
-                amount: 1500,
-                type: 'debit',
-                recipient: 'Tom Wilson',
-                recipientUpi: 'tom@paytm',
-                status: 'pending',
-                description: 'Birthday gift',
-                bankRef: 'BNK258369147'
-            }
+            // {
+            //     id: 'TXN001',
+            //     date: '2025-09-05',
+            //     time: '14:30:25',
+            //     upiId: 'john@paytm',
+            //     amount: 2500,
+            //     type: 'debit',
+            //     recipient: 'Jane Smith',
+            //     recipientUpi: 'jane@googlepay',
+            //     status: 'success',
+            //     description: 'Payment for dinner',
+            //     bankRef: 'BNK123456789'
+            // },
+            // {
+            //     id: 'TXN002',
+            //     date: '2025-09-05',
+            //     time: '12:15:10',
+            //     upiId: 'mike@phonepe',
+            //     amount: 5000,
+            //     type: 'credit',
+            //     recipient: 'Mike Johnson',
+            //     recipientUpi: 'john@paytm',
+            //     status: 'success',
+            //     description: 'Salary advance',
+            //     bankRef: 'BNK987654321'
+            // },
+            // {
+            //     id: 'TXN003',
+            //     date: '2025-09-04',
+            //     time: '18:45:33',
+            //     upiId: 'john@paytm',
+            //     amount: 1200,
+            //     type: 'debit',
+            //     recipient: 'Sarah Wilson',
+            //     recipientUpi: 'sarah@paytm',
+            //     status: 'pending',
+            //     description: 'Book purchase',
+            //     bankRef: 'BNK456789123'
+            // },
+            // {
+            //     id: 'TXN004',
+            //     date: '2025-09-04',
+            //     time: '16:22:17',
+            //     upiId: 'david@googlepay',
+            //     amount: 750,
+            //     type: 'credit',
+            //     recipient: 'David Brown',
+            //     recipientUpi: 'john@paytm',
+            //     status: 'success',
+            //     description: 'Refund for movie ticket',
+            //     bankRef: 'BNK789123456'
+            // },
+            // {
+            //     id: 'TXN005',
+            //     date: '2025-09-03',
+            //     time: '10:30:45',
+            //     upiId: 'john@paytm',
+            //     amount: 3500,
+            //     type: 'debit',
+            //     recipient: 'Electric Company',
+            //     recipientUpi: 'electricity@gov',
+            //     status: 'failed',
+            //     description: 'Electricity bill payment',
+            //     bankRef: 'BNK321654987'
+            // },
+            // {
+            //     id: 'TXN006',
+            //     date: '2025-09-03',
+            //     time: '09:15:22',
+            //     upiId: 'amy@phonepe',
+            //     amount: 8900,
+            //     type: 'credit',
+            //     recipient: 'Amy Davis',
+            //     recipientUpi: 'john@paytm',
+            //     status: 'success',
+            //     description: 'Freelance payment',
+            //     bankRef: 'BNK654987321'
+            // },
+            //     {
+            //         id: 'TXN007',
+            //         date: '2025-09-02',
+            //         time: '20:11:08',
+            //         upiId: 'john@paytm',
+            //         amount: 450,
+            //         type: 'debit',
+            //         recipient: 'Food Delivery',
+            //         recipientUpi: 'food@zomato',
+            //         status: 'success',
+            //         description: 'Dinner order',
+            //         bankRef: 'BNK147258369'
+            //     },
+            //     {
+            //         id: 'TXN008',
+            //         date: '2025-09-02',
+            //         time: '15:40:55',
+            //         upiId: 'john@paytm',
+            //         amount: 1500,
+            //         type: 'debit',
+            //         recipient: 'Tom Wilson',
+            //         recipientUpi: 'tom@paytm',
+            //         status: 'pending',
+            //         description: 'Birthday gift',
+            //         bankRef: 'BNK258369147'
+            //     }
         ];
 
         let filteredTransactions = [...transactions];
 
         // Format currency
-        function formatCurrency(amount) {
-            return new Intl.NumberFormat('en-IN', {
-                style: 'currency',
-                currency: 'INR',
-                minimumFractionDigits: 0
-            }).format(amount);
-        }
+        // function formatCurrency(amount) {
+        //     return new Intl.NumberFormat('en-IN', {
+        //         style: 'currency',
+        //         currency: 'INR',
+        //         minimumFractionDigits: 0
+        //     }).format(amount);
+        // }
 
         // Format date and time
-        function formatDateTime(date, time) {
-            const dateObj = new Date(date + 'T' + time);
-            return {
-                date: dateObj.toLocaleDateString('en-IN'),
-                time: dateObj.toLocaleTimeString('en-IN', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                })
-            };
-        }
+        // function formatDateTime(date, time) {
+        //     const dateObj = new Date(date + 'T' + time);
+        //     return {
+        //         date: dateObj.toLocaleDateString('en-IN'),
+        //         time: dateObj.toLocaleTimeString('en-IN', { 
+        //             hour: '2-digit', 
+        //             minute: '2-digit' 
+        //         })
+        //     };
+        // }
 
         // Update summary cards
         function updateSummary() {
@@ -646,8 +726,8 @@
                 return true;
             });
 
-            populateTransactions();
-            updateSummary();
+            // populateTransactions();
+            // updateSummary();
         }
 
         // Generate PDF for transaction
@@ -777,12 +857,12 @@
             document.getElementById('dateTo').value = today.toISOString().split('T')[0];
             document.getElementById('dateFrom').value = thirtyDaysAgo.toISOString().split('T')[0];
 
-            populateTransactions();
-            updateSummary();
+            // populateTransactions();
+            // updateSummary();
         }
 
         // Initialize when page loads
-        window.addEventListener('load', init);
+        // window.addEventListener('load', init);
     </script>
 </body>
 </html>

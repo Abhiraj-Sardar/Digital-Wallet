@@ -305,7 +305,7 @@
     <?php
         include "./navbar.php";
         require_once '../Model/db_connect.php';
-        $_SESSION['sender_id']=1; //profile user id
+        $uid=$_SESSION['uid']; //profile user id
         $uemail=$_SESSION['uemail'];
        
         try {
@@ -315,7 +315,7 @@
                 echo "Connection failed: " . $e->getMessage();
         }   
 
-        $uo = "select * from user where id LIKE 1";
+        $uo = "select * from user where id LIKE '$uid'";
         $stmt=$pdo->query($uo);
         $ui = $stmt->fetch();
 
@@ -395,7 +395,7 @@
                                     echo '<tr>';
                                     echo '<td>'.$row['id'].'</td>';
                                     echo '<td>'.$row['name'].'</td>';
-                                    echo '<td>'.$row['email'].'</td>';
+                                    echo '<td>'.$row['email']." <i class='fa-solid fa-certificate' style='color: #2bee38;'></i>".'</td>';
                                     echo '<td>'.$row['amount'].'</td>';
                                     echo '<td>2025-09-04</td>';
                                     echo '<td><span class="status active">Active</span></td>';
