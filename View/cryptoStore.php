@@ -18,6 +18,14 @@
             min-height: 100vh;
         }
 
+        .extend-btn{
+            position: absolute;
+            z-index: 1000;
+            cursor: pointer;
+            background-color:#1B1A39;
+            padding:1rem;
+        }
+
         .container {
             display: flex;
             min-height: 100vh;
@@ -38,6 +46,7 @@
             width: 0;
             min-width: 0;
             overflow: hidden;
+
         }
 
         .toggle-btn {
@@ -295,13 +304,34 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .cart{
+            position: absolute;
+            z-index:1000;
+            right: 25px;
+        }
+
+        .cart::before{
+            position: absolute;
+            height:100px;
+            width:100px;
+            background-color:red;
+            content:1;
+        }
+
     </style>
 </head>
         <?php include "./navbar.php";?>
 <body>
     <div class="container">
+
+        <a class="cart"><i class="fa-solid fa-cart-shopping" style="color: #FFD43B; font-size:24px;"></i></a>
+        
+        <div class="extend-btn" id="toggleBtn">
+            <i class="fa-solid fa-sliders" style="color: #f7f7f7; font-size:24px;"></i>
+        </div>
         <div class="sidebar" id="sidebar">
-            <button class="toggle-btn" id="toggleBtn">
+            <button class="toggle-btn">
                 <span id="toggleIcon">‹</span>
             </button>
             
@@ -409,7 +439,7 @@
 
     <script>
         // Sample cryptocurrency data
-        const cryptoData = [
+        var cryptoData = [
             {
                 name: "Bitcoin",
                 symbol: "BTC",
@@ -522,6 +552,8 @@
             }
         ];
 
+
+    
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
             renderCryptoCards(cryptoData);
@@ -536,12 +568,13 @@
             const mainContent = document.getElementById('mainContent');
 
             toggleBtn.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
                 
-                if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.toggle('collapsed');
+                if (!sidebar.classList.contains('collapsed')) {
                     toggleIcon.textContent = '›';
                 } else {
                     toggleIcon.textContent = '‹';
+                    
                 }
             });
         }
@@ -604,6 +637,8 @@
                         <div class="stat-label">Category</div>
                         <div class="stat-value">${crypto.category.toUpperCase()}</div>
                     </div>
+
+                    
                 </div>
             `;
 

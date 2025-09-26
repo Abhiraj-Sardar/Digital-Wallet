@@ -28,8 +28,8 @@
     <div class="logo"><img src="./img/logo.png" height='50' width='50'/> PayGo</div>
     <ul class="nav-links" id="navLinks">
       <li><a href="index.php">Home</a></li>
-      <li><a href="#">Developer Info</a></li>
-      <li><a href="#"><i class="fa-brands fa-github" style="font-size:25px";></i></a></li>
+      <li><a href="https://github.com/Abhiraj-Sardar">Developer Info</a></li>
+      <li><a href="https://github.com/Abhiraj-Sardar/Digital-Wallet"><i class="fa-brands fa-github" style="font-size:25px";></i></a></li>
       <li>
       <?php 
       if(isset($_SESSION['uname'])){
