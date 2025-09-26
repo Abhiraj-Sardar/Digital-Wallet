@@ -321,11 +321,15 @@
 
     </style>
 </head>
-        <?php include "./navbar.php";?>
+        <?php include "./navbar.php";
+
+        $amt = $_SESSION['amt'];
+        
+        ?>
 <body>
     <div class="container">
 
-        <a class="cart"><i class="fa-solid fa-cart-shopping" style="color: #FFD43B; font-size:24px;"></i></a>
+        <a class="cart"><i id="ct" class="fa-solid fa-cart-shopping" style="color: #FFD43B; font-size:24px;"></i></a>
         
         <div class="extend-btn" id="toggleBtn">
             <i class="fa-solid fa-sliders" style="color: #f7f7f7; font-size:24px;"></i>
@@ -552,8 +556,11 @@
             }
         ];
 
-
-    
+        var price=0;
+        var cnt=0;
+        
+        var cartCnt = document.querySelector("#ct");
+        
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
             renderCryptoCards(cryptoData);
@@ -639,10 +646,26 @@
                     </div>
 
                     
+
                 </div>
+                
+                <button id='crypto-btn' onClick=update(${crypto.price}) style="width:100%;padding: 12px 0; margin-top:12px;color:white; border-radius:10px; ${(crypto.price><?php echo $amt?>)?"background-color:#63E6BE;":"background-color:red;"};">
+                        ${(crypto.price><?php echo $amt?>)?"Grab It":"Sorry U Don't Have Sufficient Amount"}
+                <button>
             `;
 
             return card;
+        }
+        
+        function update(p){
+            if(price < <?php echo $amt;?>){
+                price+=p;
+                cnt+=1;
+                cartCnt.innerText=cnt;
+            }
+            else{
+                console.log("sc");
+            }
         }
 
         // Format large numbers
