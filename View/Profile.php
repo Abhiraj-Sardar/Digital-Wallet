@@ -601,6 +601,8 @@
 
             </div>
 
+            
+
             <div class="main-panel">
                 <div class="card">
                     <div class="chart-title">Spending Analytics</div>

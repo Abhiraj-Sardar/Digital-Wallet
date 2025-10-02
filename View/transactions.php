@@ -457,21 +457,22 @@
                     </thead>
                     <tbody id="transactionsBody">
                         <?php 
+                            $cnt=1;
                             while($ts_row = $ts_result->fetch()){
                                 echo "<tr id='ttable'>";
-                                echo "<td id='tid'>TXXN".$ts_row['trans_id']."</td>";
-                                echo "<td id='tdate'>".$ts_row['t_date']."</td>";
+                                echo "<td id='tid$cnt'>TXXN".$ts_row['trans_id']."</td>";
+                                echo "<td id='tdate$cnt'>".$ts_row['t_date']."</td>";
                                
                                 if($ts_row['status']==1){
-                                    echo "<td id='upi'>".$ts_row['rid']."</td>";
+                                    echo "<td id='upi$cnt'>".$ts_row['rid']."</td>";
                                 }else{
-                                    echo "<td id='upi'>".$ts_row['sid']."</td>";
+                                    echo "<td id='upi$cnt'>".$ts_row['sid']."</td>";
                                 }
                                 
                                 if($ts_row['status']==1){
-                                    echo "<td id='amt' style='color:red;'><b>-".$ts_row['amount']."</b></td>";
+                                    echo "<td id='amt$cnt' style='color:red;'><b>-".$ts_row['amount']."</b></td>";
                                 }else{
-                                    echo "<td id='amt' style='color:green;'><b> +".$ts_row['amount']."</b></td>";
+                                    echo "<td id='amt$cnt' style='color:green;'><b> +".$ts_row['amount']."</b></td>";
                                 }
                                 
                                 $rid=$ts_row['rid'];
@@ -481,28 +482,29 @@
                                     $ts2 = "select name from user where id like '$rid'";
                                     $ts_result2=$pdo->query($ts2);
                                     $ts_row2 = $ts_result2->fetch();
-                                    echo "<td>".$ts_row2['name']."</td>";
+                                    echo "<td id='name$cnt'>".$ts_row2['name']."</td>";
                                 }else{
                                     $ts3 = "select name from user where id like '$sid'";
                                     $ts_result3=$pdo->query($ts3);
                                     $ts_row3 = $ts_result3->fetch();
-                                    echo "<td>".$ts_row3['name']."</td>";
+                                    echo "<td id='name$cnt'>".$ts_row3['name']."</td>";
                                 }
                                 
 
                                 if($ts_row['status']==1){
-                                    echo "<td id='status'>Send</td>";
+                                    echo "<td id='status$cnt'>Send</td>";
                                 }else{
-                                    echo "<td id='status'>Received</td>";
+                                    echo "<td id='status$cnt'>Received</td>";
                                 }
 
                                 echo "<td>
-                                        <button class='pdf-btn' onclick='generatePDF()'>
+                                        <button class='pdf-btn' onclick='generatePDF($cnt)'>
                                             📄 PDF
                                         </button>
                                      </td>";
                                 
                                 echo "</tr>";
+                                $cnt+=1;
                             }
                         ?>
                         
@@ -730,19 +732,18 @@
             // updateSummary();
         }
 
-        // Generate PDF for transaction
-        function generatePDF(transactionId) {
-            const transaction = transactions.find(t => t.id === transactionId);
-            if (!transaction) return;
+        
 
-            // Show loading state
-            const button = event.target;
-            const originalText = button.innerHTML;
-            button.innerHTML = '<div class="loading"></div> Generating...';
-            button.disabled = true;
 
-            // Create PDF after a short delay to show loading animation
-            setTimeout(() => {
+        function generatePDF(transactionId){
+             var tid = document.querySelector(`#tid${transactionId}`).innerHTML;
+             var tdate = document.querySelector(`#tdate${transactionId}`).innerHTML;
+             var upi = document.querySelector(`#upi${transactionId}`).innerHTML;
+             var amt = document.querySelector(`#amt${transactionId}`).innerText;
+             var name = document.querySelector(`#name${transactionId}`).innerHTML;
+             var status = document.querySelector(`#status${transactionId}`).innerHTML;
+
+             setTimeout(() => {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
 
@@ -751,17 +752,15 @@
                 doc.setTextColor(102, 126, 234);
                 doc.text('Transaction Receipt', 105, 30, { align: 'center' });
 
-                // Add a line
+                // draw a line
                 doc.setLineWidth(0.5);
                 doc.setDrawColor(102, 126, 234);
                 doc.line(20, 35, 190, 35);
-
+                
                 // Transaction details
                 doc.setFontSize(12);
                 doc.setTextColor(0, 0, 0);
 
-                const datetime = formatDateTime(transaction.date, transaction.time);
-                
                 let y = 55;
                 const leftColumn = 30;
                 const rightColumn = 110;
@@ -772,79 +771,45 @@
                 y += 10;
 
                 doc.setFont(undefined, 'normal');
-                doc.text(`Transaction ID: ${transaction.id}`, leftColumn, y);
+                doc.text(`Transaction ID: ${tid}`, leftColumn, y);
                 y += 8;
-                doc.text(`Date: ${datetime.date}`, leftColumn, y);
-                y += 8;
-                doc.text(`Time: ${datetime.time}`, leftColumn, y);
-                y += 8;
-                doc.text(`Status: ${transaction.status.toUpperCase()}`, leftColumn, y);
-                y += 8;
-                doc.text(`Bank Reference: ${transaction.bankRef}`, leftColumn, y);
 
-                // Right column
-                y = 65;
-                doc.setFont(undefined, 'bold');
-                doc.text('Payment Information:', rightColumn, y);
-                y += 10;
 
                 doc.setFont(undefined, 'normal');
-                doc.text(`Amount: ${transaction.type === 'debit' ? '-' : '+'}${formatCurrency(transaction.amount)}`, rightColumn, y);
+                doc.text(`Transaction Date: ${tdate}`, leftColumn, y);
                 y += 8;
-                doc.text(`Type: ${transaction.type === 'debit' ? 'Payment Sent' : 'Payment Received'}`, rightColumn, y);
-                y += 8;
-                doc.text(`From UPI: ${transaction.upiId}`, rightColumn, y);
-                y += 8;
-                doc.text(`To UPI: ${transaction.recipientUpi}`, rightColumn, y);
 
-                // Description section
-                y += 20;
-                doc.setFont(undefined, 'bold');
-                doc.text('Description:', leftColumn, y);
-                y += 8;
                 doc.setFont(undefined, 'normal');
-                doc.text(transaction.description, leftColumn, y);
-
-                // Recipient section
-                y += 15;
-                doc.setFont(undefined, 'bold');
-                doc.text(`${transaction.type === 'debit' ? 'Paid To:' : 'Received From:'}`, leftColumn, y);
+                doc.text(`UPI ID: ${upi}@ibl`, leftColumn, y);
                 y += 8;
-                doc.setFont(undefined, 'normal');
-                doc.text(transaction.recipient, leftColumn, y);
 
-                // Footer
-                y = 250;
-                doc.setLineWidth(0.3);
-                doc.line(20, y, 190, y);
-                y += 10;
+                doc.setFont(undefined, 'normal');
+                doc.text(`Amount: ${amt}`, leftColumn, y);
+                y += 8;
+
+                doc.setFont(undefined, 'normal');
+                doc.text(`To/From: ${name}`, leftColumn, y);
+                y += 8;
+
+                doc.setFont(undefined, 'normal');
+                doc.text(`Status: ${status}`, leftColumn, y);
+                y += 80;
+
                 doc.setFontSize(10);
                 doc.setTextColor(128, 128, 128);
                 doc.text('This is a system-generated receipt. No signature required.', 105, y, { align: 'center' });
-                y += 6;
-                doc.text(`Generated on: ${new Date().toLocaleString('en-IN')}`, 105, y, { align: 'center' });
+                y -= 80;
 
-                // Add transaction status indicator
-                if (transaction.status === 'success') {
-                    doc.setTextColor(46, 204, 113);
-                    doc.setFontSize(14);
-                    doc.text('✓ SUCCESSFUL', 105, 200, { align: 'center' });
-                } else if (transaction.status === 'pending') {
-                    doc.setTextColor(241, 196, 15);
-                    doc.setFontSize(14);
-                    doc.text('⏳ PENDING', 105, 200, { align: 'center' });
-                } else if (transaction.status === 'failed') {
-                    doc.setTextColor(231, 76, 60);
-                    doc.setFontSize(14);
-                    doc.text('✗ FAILED', 105, 200, { align: 'center' });
-                }
+
+                doc.setTextColor(46, 204, 113);
+                doc.setFontSize(18);
+                doc.text(status, 105, 200, { align: 'center' });
+
 
                 // Save the PDF
-                doc.save(`Transaction_${transactionId}_Receipt.pdf`);
+                doc.save(`Transaction_${tid}_Receipt.pdf`);
 
                 // Reset button state
-                button.innerHTML = originalText;
-                button.disabled = false;
             }, 1000);
         }
 
