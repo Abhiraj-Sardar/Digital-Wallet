@@ -1,53 +1,122 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ Section</title>
 
-$dataPoints = array(
-	array("x"=> 10, "y"=> 41),
-	array("x"=> 20, "y"=> 35, "indexLabel"=> "Lowest"),
-	array("x"=> 30, "y"=> 50),
-	array("x"=> 40, "y"=> 45),
-	array("x"=> 50, "y"=> 52),
-	array("x"=> 60, "y"=> 68),
-	array("x"=> 70, "y"=> 38),
-	array("x"=> 80, "y"=> 71, "indexLabel"=> "Highest"),
-	array("x"=> 90, "y"=> 52),
-	array("x"=> 100, "y"=> 60),
-	array("x"=> 110, "y"=> 36),
-	array("x"=> 120, "y"=> 49),
-	array("x"=> 130, "y"=> 41)
-);
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 0;
+    }
 
-?>
-<!DOCTYPE HTML>
-<html>
-<head>  
-<script>
-window.onload = function () {
+    .faq-container {
+      width: 80%;
+      max-width: 800px;
+      margin: 50px auto;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
 
-var chart = new CanvasJS.Chart("chartContainer", {
-	animationEnabled: true,
-	exportEnabled: true,
-	theme: "light1", // "light1", "light2", "dark1", "dark2"
-	title:{
-		text: "Simple Column Chart with Index Labels"
-	},
-	axisY:{
-		includeZero: true
-	},
-	data: [{
-		type: "column", //change type to bar, line, area, pie, etc
-		//indexLabel: "{y}", //Shows y value on all Data Points
-		indexLabelFontColor: "#5A5757",
-		indexLabelPlacement: "outside",   
-		dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-	}]
-});
-chart.render();
+    .faq-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #222;
+    }
 
-}
-</script>
+    .faq-item {
+      border-bottom: 1px solid #ddd;
+      padding: 15px 0;
+      cursor: pointer;
+    }
+
+    .faq-question {
+      position: relative;
+      padding-right: 20px;
+      font-size: 18px;
+      color: #0056d6;
+      font-weight: 600;
+    }
+
+    .faq-question::after {
+      content: '+';
+      position: absolute;
+      right: 0;
+      font-size: 22px;
+      transition: 0.4s;
+    }
+
+    .faq-item.active .faq-question::after {
+      content: '-';
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      font-size: 16px;
+      color: #333;
+      margin-top: 5px;
+    }
+  </style>
 </head>
+
 <body>
-<div id="chartContainer" style="height: 370px; width: 100%;"></div>
-<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+
+  <div class="faq-container">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-question">How do I create a new account?</div>
+      <div class="faq-answer">
+        To create an account, click on the **Sign Up** button and follow the steps. You only need your phone number and email ID.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Is my payment information secure?</div>
+      <div class="faq-answer">
+        Yes. We use **bank-level encryption and secured servers** to ensure your information is always protected.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">How long do transactions take?</div>
+      <div class="faq-answer">
+        Most transactions are processed **instantly**. In rare cases, it may take up to 24 hours depending on bank servers.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Are there any hidden fees?</div>
+      <div class="faq-answer">
+        No. We maintain a **transparent** fee structure. Standard transaction charges (if any) will be shown before payment.
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+      item.addEventListener('click', () => {
+        item.classList.toggle('active');
+        let answer = item.querySelector('.faq-answer');
+
+        if (item.classList.contains('active')) {
+          answer.style.maxHeight = answer.scrollHeight + "px";
+        } else {
+          answer.style.maxHeight = null;
+        }
+      });
+    });
+  </script>
+
 </body>
-</html>                              
+</html>

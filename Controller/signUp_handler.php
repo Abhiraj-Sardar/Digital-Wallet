@@ -24,7 +24,7 @@
         echo "Connection failed: " . $e->getMessage();
         }    
 
-        $rs = "INSERT INTO user VALUES('$uid','$uname','$email','$password',2000.00)";
+        $rs = "INSERT INTO user VALUES('$uid','$uname','$email','$password',2000.00,0)";
         $result = $pdo->query($rs);
 
         

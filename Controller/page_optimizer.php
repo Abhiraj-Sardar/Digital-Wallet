@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,11 +7,14 @@
 
 </head>
 <body>
-    <?php include "../View/loader.html"; ?>
+    <?php include "../View/loader.html"; 
+    ?>
+
 <script>
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const paramValue = urlParams.get('src');
+
     console.log(paramValue);
 
     setTimeout(() => {
@@ -21,6 +22,9 @@
     }, 2000);
 
     function renderPage(){
+        if(paramValue=='profile'){
+            location.href='http://localhost/Digital-Wallet/View/profile.php';
+        }
         if(paramValue=='transactions'){
             location.href='http://localhost/Digital-Wallet/View/transactions.php';
         }
@@ -28,7 +32,8 @@
             location.href='http://localhost/Digital-Wallet/View/shareMoney.php';
         }else if(paramValue=='crypto'){
             location.href='http://localhost/Digital-Wallet/View/cryptoStore.php';
-        }else{
+        }
+        else{
             location.href='http://localhost/Digital-Wallet/View/Profile.php';
         }
     }

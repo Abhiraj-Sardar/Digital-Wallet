@@ -150,6 +150,7 @@
             padding: 30px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             border: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 5rem;
         }
 
         .transactions-section h2 {
@@ -375,6 +376,11 @@
             $ts6= "select sum(amount) as ts_receive from transactions where rid like '$sid' and status=0";
             $ts6_result = $pdo->query($ts6);
             $ts6_row = $ts6_result->fetch();
+
+
+            // $_SESSION['trans']=$ts4_row['count'];
+            // $_SESSION['send']=$ts5_row['ts_send'];
+            // $_SESSION['receive']=$ts6_row['ts_receive'];
         ?>
     <div class="container">
         <div class="header">
@@ -405,38 +411,6 @@
             </div>
         </div>
 
-        <!-- Filters -->
-        <div class="filters-section">
-            <div class="filters-container">
-                <div class="filter-group">
-                    <label for="dateFrom">From Date</label>
-                    <input type="date" id="dateFrom" name="dateFrom">
-                </div>
-                <div class="filter-group">
-                    <label for="dateTo">To Date</label>
-                    <input type="date" id="dateTo" name="dateTo">
-                </div>
-                <div class="filter-group">
-                    <label for="statusFilter">Status</label>
-                    <select id="statusFilter" name="statusFilter">
-                        <option value="">All Status</option>
-                        <option value="success">Success</option>
-                        <option value="pending">Pending</option>
-                        <option value="failed">Failed</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="typeFilter">Type</label>
-                    <select id="typeFilter" name="typeFilter">
-                        <option value="">All Types</option>
-                        <option value="debit">Sent</option>
-                        <option value="credit">Received</option>
-                    </select>
-                </div>
-                <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
-            </div>
-        </div>
-
         
 
         <!-- Transactions Table -->
@@ -463,13 +437,13 @@
                                 echo "<td id='tid$cnt'>TXXN".$ts_row['trans_id']."</td>";
                                 echo "<td id='tdate$cnt'>".$ts_row['t_date']."</td>";
                                
-                                if($ts_row['status']==1){
+                                if($ts_row['sid']==$_SESSION['uid']){
                                     echo "<td id='upi$cnt'>".$ts_row['rid']."</td>";
                                 }else{
                                     echo "<td id='upi$cnt'>".$ts_row['sid']."</td>";
                                 }
                                 
-                                if($ts_row['status']==1){
+                                if($ts_row['sid']==$_SESSION['uid']){
                                     echo "<td id='amt$cnt' style='color:red;'><b>-".$ts_row['amount']."</b></td>";
                                 }else{
                                     echo "<td id='amt$cnt' style='color:green;'><b> +".$ts_row['amount']."</b></td>";
@@ -478,7 +452,7 @@
                                 $rid=$ts_row['rid'];
                                 $sid=$ts_row['sid'];
 
-                                if($ts_row['status']==1){
+                                if($ts_row['sid']==$_SESSION['uid']){
                                     $ts2 = "select name from user where id like '$rid'";
                                     $ts_result2=$pdo->query($ts2);
                                     $ts_row2 = $ts_result2->fetch();
@@ -491,10 +465,10 @@
                                 }
                                 
 
-                                if($ts_row['status']==1){
-                                    echo "<td id='status$cnt'>Send</td>";
+                                if($ts_row['sid']==$_SESSION['uid']){
+                                    echo "<td id='status$cnt' class='fa-solid fa-arrow-trend-down' style='color: #f60909;'> Send</td>";
                                 }else{
-                                    echo "<td id='status$cnt'>Received</td>";
+                                    echo "<td id='status$cnt' class='fa-solid fa-arrow-trend-up' style='color: #63E6BE;'> Received</td>";
                                 }
 
                                 echo "<td>
@@ -518,223 +492,7 @@
     </div>
 
     <script>
-        // Sample transaction data
-        let transactions = [
-            // {
-            //     id: 'TXN001',
-            //     date: '2025-09-05',
-            //     time: '14:30:25',
-            //     upiId: 'john@paytm',
-            //     amount: 2500,
-            //     type: 'debit',
-            //     recipient: 'Jane Smith',
-            //     recipientUpi: 'jane@googlepay',
-            //     status: 'success',
-            //     description: 'Payment for dinner',
-            //     bankRef: 'BNK123456789'
-            // },
-            // {
-            //     id: 'TXN002',
-            //     date: '2025-09-05',
-            //     time: '12:15:10',
-            //     upiId: 'mike@phonepe',
-            //     amount: 5000,
-            //     type: 'credit',
-            //     recipient: 'Mike Johnson',
-            //     recipientUpi: 'john@paytm',
-            //     status: 'success',
-            //     description: 'Salary advance',
-            //     bankRef: 'BNK987654321'
-            // },
-            // {
-            //     id: 'TXN003',
-            //     date: '2025-09-04',
-            //     time: '18:45:33',
-            //     upiId: 'john@paytm',
-            //     amount: 1200,
-            //     type: 'debit',
-            //     recipient: 'Sarah Wilson',
-            //     recipientUpi: 'sarah@paytm',
-            //     status: 'pending',
-            //     description: 'Book purchase',
-            //     bankRef: 'BNK456789123'
-            // },
-            // {
-            //     id: 'TXN004',
-            //     date: '2025-09-04',
-            //     time: '16:22:17',
-            //     upiId: 'david@googlepay',
-            //     amount: 750,
-            //     type: 'credit',
-            //     recipient: 'David Brown',
-            //     recipientUpi: 'john@paytm',
-            //     status: 'success',
-            //     description: 'Refund for movie ticket',
-            //     bankRef: 'BNK789123456'
-            // },
-            // {
-            //     id: 'TXN005',
-            //     date: '2025-09-03',
-            //     time: '10:30:45',
-            //     upiId: 'john@paytm',
-            //     amount: 3500,
-            //     type: 'debit',
-            //     recipient: 'Electric Company',
-            //     recipientUpi: 'electricity@gov',
-            //     status: 'failed',
-            //     description: 'Electricity bill payment',
-            //     bankRef: 'BNK321654987'
-            // },
-            // {
-            //     id: 'TXN006',
-            //     date: '2025-09-03',
-            //     time: '09:15:22',
-            //     upiId: 'amy@phonepe',
-            //     amount: 8900,
-            //     type: 'credit',
-            //     recipient: 'Amy Davis',
-            //     recipientUpi: 'john@paytm',
-            //     status: 'success',
-            //     description: 'Freelance payment',
-            //     bankRef: 'BNK654987321'
-            // },
-            //     {
-            //         id: 'TXN007',
-            //         date: '2025-09-02',
-            //         time: '20:11:08',
-            //         upiId: 'john@paytm',
-            //         amount: 450,
-            //         type: 'debit',
-            //         recipient: 'Food Delivery',
-            //         recipientUpi: 'food@zomato',
-            //         status: 'success',
-            //         description: 'Dinner order',
-            //         bankRef: 'BNK147258369'
-            //     },
-            //     {
-            //         id: 'TXN008',
-            //         date: '2025-09-02',
-            //         time: '15:40:55',
-            //         upiId: 'john@paytm',
-            //         amount: 1500,
-            //         type: 'debit',
-            //         recipient: 'Tom Wilson',
-            //         recipientUpi: 'tom@paytm',
-            //         status: 'pending',
-            //         description: 'Birthday gift',
-            //         bankRef: 'BNK258369147'
-            //     }
-        ];
-
-        let filteredTransactions = [...transactions];
-
-        // Format currency
-        // function formatCurrency(amount) {
-        //     return new Intl.NumberFormat('en-IN', {
-        //         style: 'currency',
-        //         currency: 'INR',
-        //         minimumFractionDigits: 0
-        //     }).format(amount);
-        // }
-
-        // Format date and time
-        // function formatDateTime(date, time) {
-        //     const dateObj = new Date(date + 'T' + time);
-        //     return {
-        //         date: dateObj.toLocaleDateString('en-IN'),
-        //         time: dateObj.toLocaleTimeString('en-IN', { 
-        //             hour: '2-digit', 
-        //             minute: '2-digit' 
-        //         })
-        //     };
-        // }
-
-        // Update summary cards
-        function updateSummary() {
-            const totalTransactions = filteredTransactions.length;
-            const totalSent = filteredTransactions
-                .filter(t => t.type === 'debit' && t.status === 'success')
-                .reduce((sum, t) => sum + t.amount, 0);
-            const totalReceived = filteredTransactions
-                .filter(t => t.type === 'credit' && t.status === 'success')
-                .reduce((sum, t) => sum + t.amount, 0);
-            const pendingCount = filteredTransactions
-                .filter(t => t.status === 'pending').length;
-
-            document.getElementById('totalTransactions').textContent = totalTransactions;
-            document.getElementById('totalSent').textContent = formatCurrency(totalSent);
-            document.getElementById('totalReceived').textContent = formatCurrency(totalReceived);
-            document.getElementById('pendingCount').textContent = pendingCount;
-        }
-
-        // Populate transactions table
-        function populateTransactions() {
-            const tbody = document.getElementById('transactionsBody');
-            tbody.innerHTML = '';
-
-            if (filteredTransactions.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="no-results">No transactions found matching your criteria</td></tr>';
-                return;
-            }
-
-            filteredTransactions.forEach(transaction => {
-                const datetime = formatDateTime(transaction.date, transaction.time);
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td class="transaction-id">${transaction.id}</td>
-                    <td>
-                        <div>${datetime.date}</div>
-                        <div class="date-time">${datetime.time}</div>
-                    </td>
-                    <td class="upi-id">${transaction.upiId}</td>
-                    <td class="amount ${transaction.type}">
-                        ${transaction.type === 'debit' ? '-' : '+'}${formatCurrency(transaction.amount)}
-                    </td>
-                    <td>
-                        <div class="recipient">${transaction.recipient}</div>
-                        <div class="upi-id">${transaction.recipientUpi}</div>
-                    </td>
-                    <td><span class="status ${transaction.status}">${transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}</span></td>
-                    <td>
-                        <button class="pdf-btn" onclick="generatePDF('${transaction.id}')">
-                            📄 PDF
-                        </button>
-                    </td>
-                `;
-                
-                tbody.appendChild(row);
-            });
-        }
-
-        // Apply filters
-        function applyFilters() {
-            const dateFrom = document.getElementById('dateFrom').value;
-            const dateTo = document.getElementById('dateTo').value;
-            const statusFilter = document.getElementById('statusFilter').value;
-            const typeFilter = document.getElementById('typeFilter').value;
-
-            filteredTransactions = transactions.filter(transaction => {
-                // Date filter
-                if (dateFrom && transaction.date < dateFrom) return false;
-                if (dateTo && transaction.date > dateTo) return false;
-                
-                // Status filter
-                if (statusFilter && transaction.status !== statusFilter) return false;
-                
-                // Type filter
-                if (typeFilter && transaction.type !== typeFilter) return false;
-                
-                return true;
-            });
-
-            // populateTransactions();
-            // updateSummary();
-        }
-
         
-
-
         function generatePDF(transactionId){
              var tid = document.querySelector(`#tid${transactionId}`).innerHTML;
              var tdate = document.querySelector(`#tdate${transactionId}`).innerHTML;
@@ -812,22 +570,7 @@
                 // Reset button state
             }, 1000);
         }
-
-        // Initialize the page
-        function init() {
-            // Set default date range (last 30 days)
-            const today = new Date();
-            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
-            
-            document.getElementById('dateTo').value = today.toISOString().split('T')[0];
-            document.getElementById('dateFrom').value = thirtyDaysAgo.toISOString().split('T')[0];
-
-            // populateTransactions();
-            // updateSummary();
-        }
-
-        // Initialize when page loads
-        // window.addEventListener('load', init);
     </script>
+    <?php include "./footer.php";?>
 </body>
 </html>

@@ -177,6 +177,7 @@
             padding: 30px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             border: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 20px;
         }
 
         .users-section h2 {
@@ -409,7 +410,7 @@
             </div>
         </div>
     </div>
-
+    <?php require "./footer.php";?>
     <script>
         // Sample data for dynamic updates
 

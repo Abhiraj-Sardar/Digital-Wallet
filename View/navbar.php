@@ -10,7 +10,8 @@
   <style>
     .navbar{
        background-color: #4B4FED;
-       border-radius:10px;
+       /* border-radius:10px; */
+       color:white;
        /* border:2px solid black; */
     }
 
@@ -33,7 +34,7 @@
       <li>
       <?php 
       if(isset($_SESSION['uname'])){
-        echo "<a href='profile.php'>".$_SESSION['uname']."</a>";
+        echo "<a href='../Controller/page_optimizer.php?src=profile'>".$_SESSION['uname']."</a>";
       }else{
         echo "<a href='login.php'>Login</a>";
       }?></li>

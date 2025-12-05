@@ -272,7 +272,7 @@
         $date = date('Y-m-d');
 
         //updating the transaction table
-        $ts = "insert into transactions(sid, rid, amount, t_date) values('$sender_id','$receiver_id','$amount','$date')";
+        $ts = "insert into transactions(sid, rid, amount, t_date, status) values('$sender_id','$receiver_id','$amount','$date',1)";
         $ts_result = $pdo->query($ts);
         $ts_row = $ts_result->fetch();
 

@@ -1,5 +1,47 @@
 <?php session_start();
 ?>
+
+<?php
+       include "./navbar.php";
+       $uname=$_SESSION['uname'];
+        $uemail=$_SESSION['uemail'];
+        $upass=$_SESSION['upass'];
+       require_once '../Model/db_connect.php';
+       try {
+            $pdo = new PDO($attr, $user, $pass, $opts);
+            // echo "Connection successfull..";
+        } catch (PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
+        }
+
+        $rs = "SELECT * FROM user WHERE email LIKE '$uemail' and password LIKE '$upass'";
+        $result = $pdo->query($rs);
+        $row = $result->fetch();
+        if($row){
+            $_SESSION['uid']=$row['id'];
+            $_SESSION['uname']=$row['name'];
+            $_SESSION['uemail']=$row['email'];
+            $_SESSION['upass']=$row['password'];
+            $_SESSION['amt']=$row['amount'];
+            $_SESSION['crypto']=$row['crypto'];
+        }   
+        else{
+            exit;
+        }
+        
+    ?>
+
+ <?php
+
+$dataPoints = array(
+	array("label"=> "Paygo Coin", "y"=> $_SESSION['amt']),
+	array("label"=> "Transactions", "y"=> 47),
+	array("label"=> "Crypto Buyed", "y"=> $_SESSION['crypto']),
+	array("label"=> "Send", "y"=> 72),
+	array("label"=> "Received", "y"=> 191),
+);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -150,7 +192,7 @@
         }
 
         .chart-container {
-            height: 300px;
+            height: 370px;
             position: relative;
         }
 
@@ -515,13 +557,35 @@
             transition: width 0.3s ease;
         }
     </style>
+<script>
+window.onload = function () {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	exportEnabled: true,
+	title:{
+		text: "Expense and Earning Analytics"
+	},
+	subtitles: [{
+		text: "Currency Used: Paygo Coin 🪙"
+	}],
+	data: [{
+		type: "pie",
+		showInLegend: "true",
+		legendText: "{label}",
+		indexLabelFontSize: 16,
+		indexLabel: "{label} - #percent%",
+		yValueFormatString: "฿#,##0",
+		dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+	}]
+});
+chart.render();
+
+}
+</script>
 </head>
 <body>
-    <?php
-       include "./navbar.php";
-       $uname=$_SESSION['uname'];
-       $amt=$_SESSION['amt'];
-    ?>
+    
     <div class="container">
         <header class="header">
             <div class="logo"><i class="fa-brands fa-bitcoin coin" style="color: #FFD43B;"></i> PayGo Coin</div>
@@ -536,7 +600,7 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <i class="fa-solid fa-coins" style="color: #FFD43B; font-size:32px;"></i>
-                <div class="stat-value" id="totalBalance"><?php echo '₹'.$amt; ?></div>
+                <div class="stat-value" id="totalBalance"><?php echo '₹'.$_SESSION['amt']; ?></div>
                 <div class="stat-label">Total PayGo Coins</div>
             </div>
             <div class="stat-card">
@@ -590,9 +654,9 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link" data-section="settings">
-                                    <span class="nav-icon">⚙️</span>
-                                    History
+                                <a href="../Controller/logout_handler.php" class="nav-link" data-section="settings">
+                                    <span class="nav-icon">🚪</span>
+                                    Exit
                                 </a>
                             </li>
                         </ul>
@@ -601,13 +665,13 @@
 
             </div>
 
-            
+           
 
             <div class="main-panel">
                 <div class="card">
-                    <div class="chart-title">Spending Analytics</div>
+                    <!-- <div class="chart-title">Spending Analytics</div> -->
                     <div class="chart-container">
-                        <canvas id="spendingChart"></canvas>
+                        <div id="chartContainer" style="height: 350px; width: 100%;"></div>
                     </div>
                 </div>
             </div>
@@ -775,7 +839,8 @@
         </div>
     </div>
 
-    <div id="notification" class="notification"></div>
+    <?php include "footer.php"?>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
     </body>
     </html>
    

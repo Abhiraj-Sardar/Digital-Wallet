@@ -319,17 +319,155 @@
             content:1;
         }
 
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .receipt {
+            background: #f9f7f1;
+            width: 320px;
+            padding: 30px 20px;
+            border-radius: 4px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: slideIn 0.4s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .receipt::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(90deg, 
+                transparent 0%, transparent 45%, 
+                #f9f7f1 45%, #f9f7f1 55%, 
+                transparent 55%, transparent 100%);
+            background-size: 20px 100%;
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #999;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .store-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .store-info {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .receipt-body {
+            margin-bottom: 15px;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .item-name {
+            flex: 1;
+        }
+
+        .item-price {
+            font-weight: bold;
+        }
+
+        .receipt-divider {
+            border-top: 1px dashed #999;
+            margin: 12px 0;
+        }
+
+        .receipt-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #333;
+        }
+
+        .receipt-footer {
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed #999;
+        }
+
+        .close-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            transition: background 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #5568d3;
+        }
+
     </style>
 </head>
         <?php include "./navbar.php";
 
         $amt = $_SESSION['amt'];
-        
+        $list = array();
         ?>
 <body>
     <div class="container">
-
-        <a class="cart"><i id="ct" class="fa-solid fa-cart-shopping" style="color: #FFD43B; font-size:24px;"></i></a>
+        <!-- id="ct" -->
+        <a class="cart"><i  id="openModal" class="fa-solid fa-cart-shopping" style="color: #FFD43B; font-size:24px;"></i></a>
         
         <div class="extend-btn" id="toggleBtn">
             <i class="fa-solid fa-sliders" style="color: #f7f7f7; font-size:24px;"></i>
@@ -437,17 +575,106 @@
 
             <div class="crypto-grid" id="cryptoGrid">
                 <!-- Crypto cards will be populated by JavaScript -->
+                 
             </div>
         </div>
     </div>
 
+
+     <div class="modal-overlay" id="modalOverlay">
+        <div class="receipt">
+            <div class="receipt-header">
+                <div class="store-name">WELCOME TO CRYPTO STORE</div>
+                <div class="store-info">
+                    123 Main Street<br>
+                    Anytown, ST 12345<br>
+                    Tel: (555) 123-4567
+                </div>
+            </div>
+
+            <div class="receipt-body">
+                <div style="font-size: 11px; margin-bottom: 10px;">
+                    DATE: 10/23/2025 14:32<br>
+                    CASHIER: PayGo<br>
+                    RECEIPT #: 0045892
+                </div>
+
+                <div class="receipt-divider"></div>
+
+                <div class="receipt-item">
+                    <span class="item-name">Total Digital Coins</span>
+                    $<span id='tdc' class="item-price">3.50</span>
+                </div>
+
+                <div class="receipt-divider"></div>
+
+                <div class="receipt-item">
+                    <span class="item-name">Total Bill</span>
+                    $<span id='tb' class="item-price">3.50</span>
+                </div>
+                <!-- <div class="receipt-item">
+                    <span class="item-name">Croissant</span>
+                    <span class="item-price">$4.25</span>
+                </div> -->
+                <!-- <div class="receipt-item">
+                    <span class="item-name">Orange Juice</span>
+                    <span class="item-price">$2.99</span>
+                </div>
+                <div class="receipt-item">
+                    <span class="item-name">Muffin - Blueberry</span>
+                    <span class="item-price">$3.75</span>
+                </div> -->
+
+                <div class="receipt-divider"></div>
+
+                <div class="receipt-item">
+                    <span class="item-name">SUBTOTAL:</span>
+                    $<span id='st' class="item-price">3.50</span>
+                </div>
+                <div class="receipt-item">
+                    <span class="item-name">TAX (8%):</span>
+                    <span class="item-price">$1.00</span>
+                </div>
+
+                <div class="receipt-total">
+                    <span>TOTAL:</span>
+                    $<span id='gt'>4.66</span>
+                </div>
+
+                <div style="margin-top: 15px; font-size: 12px;">
+                    PAYMENT METHOD: Online<br>
+                    **** **** **** 4532<br>
+                    AUTH CODE: 847291
+                </div>
+            </div>
+
+            <div class="receipt-footer">
+                THANK YOU FOR YOUR PURCHASE!<br>
+                VISIT US AGAIN SOON<br><br>
+                www.cornerstore.com
+            </div>
+
+            <center>
+                <a><button onClick=submitHandler() class="close-btn" id="closeModal">Buy Now !!!</button></a>
+            </center>
+        </div>
+    </div>
+
+    <?php require "./footer.php";?>
+
+
     <script>
         // Sample cryptocurrency data
+
+        function submitHandler(){
+            location.href=`../Controller/crypto_payment_handler.php?cnt=${cnt}&tot=${sum}`;
+        }
+
         var cryptoData = [
             {
                 name: "Bitcoin",
                 symbol: "BTC",
-                price: 43250.00,
+                price: 400.00,
                 change: 2.45,
                 marketCap: 847000000000,
                 volume: 12500000000,
@@ -458,7 +685,7 @@
             {
                 name: "Ethereum",
                 symbol: "ETH",
-                price: 2680.50,
+                price: 680.50,
                 change: -1.23,
                 marketCap: 322000000000,
                 volume: 8900000000,
@@ -502,7 +729,7 @@
             {
                 name: "XRP",
                 symbol: "XRP",
-                price: 0.62,
+                price: 110.62,
                 change: -2.87,
                 marketCap: 33000000000,
                 volume: 1800000000,
@@ -513,7 +740,7 @@
             {
                 name: "USDC",
                 symbol: "USDC",
-                price: 1.00,
+                price: 11.00,
                 change: 0.00,
                 marketCap: 25000000000,
                 volume: 4500000000,
@@ -524,7 +751,7 @@
             {
                 name: "Cardano",
                 symbol: "ADA",
-                price: 0.485,
+                price: 1.485,
                 change: 4.23,
                 marketCap: 17000000000,
                 volume: 890000000,
@@ -558,8 +785,13 @@
 
         var price=0;
         var cnt=0;
+        var tot=0;
         
-        var cartCnt = document.querySelector("#ct");
+        var cartCnt = document.querySelector("#openModal");
+        var gt = document.querySelector("#gt");
+        var tb = document.querySelector("#tb");
+        var st = document.querySelector("#st");
+        var tdc = document.querySelector("#tdc");
         
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
@@ -649,8 +881,8 @@
 
                 </div>
                 
-                <button id='crypto-btn' onClick=update(${crypto.price}) style="width:100%;padding: 12px 0; margin-top:12px;color:white; border-radius:10px; ${(crypto.price><?php echo $amt?>)?"background-color:#63E6BE;":"background-color:red;"};">
-                        ${(crypto.price><?php echo $amt?>)?"Grab It":"Sorry U Don't Have Sufficient Amount"}
+                <button id='crypto-btn' onClick=update(${crypto.price}) style="width:100%;padding: 12px 0; margin-top:12px;color:white; border-radius:10px; ${(crypto.price<<?php echo $amt?>)?"background-color:#63E6BE;":"background-color:red;"};">
+                        ${(crypto.price<<?php echo $amt?>)?"Grab It":"Sorry U Don't Have Sufficient Amount"}
                 <button>
             `;
 
@@ -660,11 +892,17 @@
         function update(p){
             if(price < <?php echo $amt;?>){
                 price+=p;
+                sum=price+1;
                 cnt+=1;
                 cartCnt.innerText=cnt;
+                tdc.innerText=cnt;
+                tb.innerText=price;
+                st.innerText=price;
+                gt.innerText=sum;
             }
             else{
-                console.log("sc");
+                alert("doesn't have Money!!");
+                console.log(cart);
             }
         }
 
@@ -767,6 +1005,24 @@
                 gridElement.innerHTML = '<div style="text-align: center; color: white; font-size: 18px; grid-column: 1 / -1;">No cryptocurrencies match your filters.</div>';
             }
         }
+
+        const openBtn = document.getElementById('openModal');
+        const closeBtn = document.getElementById('closeModal');
+        const modalOverlay = document.getElementById('modalOverlay');
+
+        openBtn.addEventListener('click', () => {
+            modalOverlay.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+        });
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+            }
+        });
 
         // Add event listeners for real-time filtering
         document.getElementById('searchCrypto').addEventListener('input', applyFilters);

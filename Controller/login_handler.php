@@ -29,8 +29,9 @@
             $_SESSION['uid']=$row['id'];
             $_SESSION['uname']=$row['name'];
             $_SESSION['uemail']=$row['email'];
+            $_SESSION['upass']=$row['password'];
             $_SESSION['amt']=$row['amount'];
-
+            $_SESSION['crypto']=$row['crypto'];
             header('Location: http://localhost/Digital-Wallet/View/profile.php');
             // echo $_SESSION['uid'];
         }else{

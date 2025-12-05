@@ -8,6 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PayFlow - Secure Online Payments Made Simple</title>
+    
     <style>
         * {
             margin: 0;
@@ -18,7 +19,8 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* background-color: #4B4FED; */
+            /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
             min-height: 100vh;
         }
 
@@ -29,23 +31,8 @@
         }
 
         /* Header */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
+       
         .logo {
             font-size: 2rem;
             font-weight: bold;
@@ -95,6 +82,7 @@
             padding: 150px 0 100px;
             text-align: center;
             color: white;
+            background-color: #4B4FED;
         }
 
         .hero h1 {
@@ -157,7 +145,7 @@
         .feature-icon {
             width: 80px;
             height: 80px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background-color: #333333;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -213,7 +201,7 @@
 
         /* Contact Section */
         .contact {
-            background: white;
+            /* background: white; */
             padding: 100px 0;
         }
 
@@ -225,7 +213,8 @@
         }
 
         .contact-form {
-            background: #f8f9ff;
+            background-color: #333333;
+            color:#fff;
             padding: 2rem;
             border-radius: 15px;
         }
@@ -237,7 +226,7 @@
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: #333;
+            color: #fff;
             font-weight: 500;
         }
 
@@ -428,27 +417,81 @@
                 transform: translateY(-20px) rotate(180deg);
             }
         }
+
+        
+        .banner-1{
+            padding:1rem 0;
+            background-color:#333333;
+            margin:0px 12px;
+            /* border:2px solid black; */
+            border-radius: 25px;
+            color: #fff;
+            font-weight:bold;
+            text-align:center;
+        }
+            
+        .faq-container {
+      width: 80%;
+      max-width: 800px;
+      margin: 50px auto;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .faq-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #222;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid #ddd;
+      padding: 15px 0;
+      cursor: pointer;
+    }
+
+    .faq-question {
+      position: relative;
+      padding-right: 20px;
+      font-size: 18px;
+      color: #0056d6;
+      font-weight: 600;
+    }
+
+    .faq-question::after {
+      content: '+';
+      position: absolute;
+      right: 0;
+      font-size: 22px;
+      transition: 0.4s;
+    }
+
+    .faq-item.active .faq-question::after {
+      content: '-';
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      font-size: 16px;
+      color: #333;
+      margin-top: 5px;
+    }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <!-- <header>
-        <nav class="container">
-            <div class="logo">PayFlow</div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#partners">Partners</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <a href="#" class="cta-button">Get Started</a>
-        </nav>
-    </header> -->
+   
+
+     
 
     <?php
         include "./navbar.php";
     ?>
 
+    
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="floating-shapes">
@@ -457,13 +500,14 @@
             <div class="shape"></div>
         </div>
         <div class="container">
-            <h1>Secure Online Payments Made Simple</h1>
+            <h1 id='context'>Secure Online Payments Made Simple</h1>
             <p>Experience the future of digital transactions with our cutting-edge payment platform. Fast, secure, and reliable payments for businesses and individuals worldwide.</p>
             <div class="hero-buttons">
                 <a href="#" class="cta-button">Start Free Trial</a>
                 <a href="#features" class="cta-button" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);">Learn More</a>
             </div>
         </div>
+        
     </section>
 
     <!-- Features Section -->
@@ -506,46 +550,48 @@
     </section>
 
     <!-- Partners Section -->
-    <section id="partners" class="partners">
-        <div class="container">
-            <h2 class="section-title fade-in">Trusted by Leading Companies</h2>
-            <p style="text-align: center; font-size: 1.1rem; color: #666; margin-bottom: 2rem;">Join thousands of businesses that trust PayFlow for their payment processing needs</p>
-            <div class="partners-grid">
-                <div class="partner-card fade-in">
-                    <div class="partner-logo">TechCorp</div>
-                    <p>Leading technology solutions provider</p>
-                </div>
-                <div class="partner-card fade-in">
-                    <div class="partner-logo">RetailMax</div>
-                    <p>Global retail chain</p>
-                </div>
-                <div class="partner-card fade-in">
-                    <div class="partner-logo">FinanceHub</div>
-                    <p>Digital banking platform</p>
-                </div>
-                <div class="partner-card fade-in">
-                    <div class="partner-logo">EcomPlus</div>
-                    <p>E-commerce marketplace</p>
-                </div>
-                <div class="partner-card fade-in">
-                    <div class="partner-logo">StartupLab</div>
-                    <p>Innovation incubator</p>
-                </div>
-                <div class="partner-card fade-in">
-                    <div class="partner-logo">GlobalPay</div>
-                    <p>International payment processor</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    
+    <div class="banner-1"><img src='./img/logo.png' height='25' width='50'/> 24 x 7 Trusted customer support to assist and help you in every step of your journey</div>
+    
+    <div class="faq-container">
+    <h2>Frequently Asked Questions</h2>
 
+    <div class="faq-item">
+      <div class="faq-question">How do I create a new account?</div>
+      <div class="faq-answer">
+        To create an account, click on the **Sign Up** button and follow the steps. You only need your phone number and email ID.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Is my payment information secure?</div>
+      <div class="faq-answer">
+        Yes. We use **bank-level encryption and secured servers** to ensure your information is always protected.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">How long do transactions take?</div>
+      <div class="faq-answer">
+        Most transactions are processed **instantly**. In rare cases, it may take up to 24 hours depending on bank servers.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Are there any hidden fees?</div>
+      <div class="faq-answer">
+        No. We maintain a **transparent** fee structure. Standard transaction charges (if any) will be shown before payment.
+      </div>
+    </div>
+
+  </div>
     <!-- Contact Section -->
     <section id="contact" class="contact">
         <div class="container">
             <h2 class="section-title fade-in">Get in Touch</h2>
             <div class="contact-content">
                 <div class="contact-form fade-in">
-                    <h3 style="margin-bottom: 1.5rem; color: #333;">Send us a Message</h3>
+                    <h3 style="margin-bottom: 1.5rem; color: #fff;">Send us a Message</h3>
                     <form id="contactForm">
                         <div class="form-group">
                             <label for="name">Full Name</label>
@@ -643,8 +689,24 @@
         </div>
     </footer>
 
-    <script>
+<script>
+        
+
         // Smooth scrolling for navigation links
+        const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+      item.addEventListener('click', () => {
+        item.classList.toggle('active');
+        let answer = item.querySelector('.faq-answer');
+
+        if (item.classList.contains('active')) {
+          answer.style.maxHeight = answer.scrollHeight + "px";
+        } else {
+          answer.style.maxHeight = null;
+        }
+      });
+    });
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
