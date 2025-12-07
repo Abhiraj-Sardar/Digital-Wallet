@@ -281,7 +281,54 @@
         // echo '</pre>';
 
         // echo 'Payment is Done Successfully';
+
+        
     ?>
+<?php
+   use PHPMailer\PHPMailer\PHPMailer;
+   use PHPMailer\PHPMailer\SMTP;
+   use PHPMailer\PHPMailer\Exception;
+
+   require './phpmailer/src/Exception.php';
+   require './phpmailer/src/PHPMailer.php';
+   require './phpmailer/src/SMTP.php';  
+
+   $mail = new PHPMailer(true);
+   if(isset($_POST['send'])){
+   
+      // getting post values
+      $fname=$_SESSION['uname'].",";		
+      $toemail=$_SESSION['uemail'];	
+      $subject="Payment Successful !!!";	
+      $message="\nYour Account is debited with $".$_POST['amount']."\n Total Available Balance: ".$_SESSION['amt']-$_POST['amount'];
+      $mail->isSMTP();					      // Set mailer to use SMTP
+      $mail->Host = 'smtp.gmail.com';             
+      $mail->SMTPAuth = true;                     
+      $mail->Username = 'abhiraj123sardar@gmail.com';	// SMTP username
+      $mail->Password = 'ogssvycjphumyntv'; 		// SMTP password
+
+      // Enable TLS encryption, 'ssl' also accepted
+      $mail->SMTPSecure = 'ssl';
+      $mail->Port = 465;                          
+      $mail->setFrom('abhiraj123sardar@gmail.com', 'Paygo');
+      // $mail->addReplyTo('myID@gmail.com', 'My_Name');
+      $mail->addAddress($toemail);   	  // Add a recipient
+      $mail->isHTML(true);                // Set email format to HTML
+      $bodyContent=$message;
+      $mail->Subject =$subject;
+      $body = 'Dear'.$fname." ";
+      $body .='<p>'.$message.'</p>';
+      $mail->Body = $body;
+
+      if(!$mail->send()) {
+         echo 'Message could not be sent.';
+         echo 'Mailer Error: ' . $mail->ErrorInfo;
+      } else {
+         echo 'Message has been sent';
+      }
+   }
+?>
+
     <!-- From Uiverse.io by anand_4957 --> 
 <div class="loader">
   <span><span></span><span></span><span></span><span></span></span>

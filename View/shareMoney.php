@@ -366,7 +366,7 @@
                     <label for="amount">Amount (₹)</label>
                     <input type="number" id="amount" name="amount" placeholder="Enter Amount" step="0.01" required>
                 </div>
-                <button type="submit" class="process-btn">Process Payment</button>
+                <button type="submit" name="send" class="process-btn">Process Payment</button>
             </form>
         </div>
 
@@ -395,9 +395,9 @@
                                 while($row = $result->fetch()){
                                     echo '<tr>';
                                     echo '<td>'.$row['id'].'</td>';
-                                    echo '<td>'.$row['name'].'</td>';
+                                    echo '<td>'."<i class='fa-regular fa-user'></i> ".$row['name'].'</td>';
                                     echo '<td>'.$row['email']." <i class='fa-solid fa-certificate' style='color: #2bee38;'></i>".'</td>';
-                                    echo '<td>'.$row['amount'].'</td>';
+                                    echo '<td>'."<i class='fa-solid fa-dollar-sign' style='color: #FFD43B;'></i>".$row['amount'].'</td>';
                                     echo '<td>2025-09-04</td>';
                                     echo '<td><span class="status active">Active</span></td>';
                                     echo '</tr>';

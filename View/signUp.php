@@ -249,12 +249,6 @@
         </div>
 
         <form action='../Controller/signUp_handler.php' method='post' id="signupForm" novalidate>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-                <div class="error-message" id="usernameError"></div>
-                <div class="success-message" id="usernameSuccess"></div>
-            </div>
 
             <div class="form-group">
                 <label for="name">Full Name</label>
@@ -290,7 +284,7 @@
         </form>
 
         <div class="signup-footer">
-            Already have an account? <a href="#" id="loginLink">Sign In</a>
+            Already have an account? <a href="login.php" id="loginLink">Sign In</a>
         </div>
     </div>
 
@@ -498,10 +492,6 @@
         // });
 
         // Login link handler
-        document.getElementById('loginLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Login functionality would be implemented here!');
-        });
 
         // Add subtle animations to form elements
         const observer = new IntersectionObserver((entries) => {

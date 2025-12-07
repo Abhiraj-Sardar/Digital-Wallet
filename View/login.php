@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PayFlow - Secure Login</title>
     <link rel="stylesheet" href="./Css/login.css"/>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="background-shapes">
@@ -40,11 +41,10 @@
                 </div>
 
                 <div class="remember-me">
-                    <div class="checkbox" id="rememberCheckbox" onclick="toggleCheckbox()"></div>
-                    <label for="rememberMe">Remember me for 30 days</label>
+                    <div class="g-recaptcha" data-sitekey="6LeqICQsAAAAAOrGc5wyYO2DgRleK-PIyDv6qYoO" data-callback="enableSubmitBtn"></div>
                 </div>
 
-                <button type="submit" class="login-btn" id="loginBtn">
+                <button type="submit" id="loginBtn" class="login-btn" disabled>
                     Sign In 
                     <div class="spinner"></div>
                 </button>
@@ -71,85 +71,7 @@
 
             <div class="signup-link">
                 Don't have an account? 
-                <a href="#" onclick="switchToSignup()">Create one now</a>
-            </div>
-
-            <div class="security-badges">
-                <div class="security-badge">
-                    <div class="security-icon">🔐</div>
-                    <div>256-bit SSL</div>
-                </div>
-                <div class="security-badge">
-                    <div class="security-icon">🛡️</div>
-                    <div>Bank-level Security</div>
-                </div>
-                <div class="security-badge">
-                    <div class="security-icon">✅</div>
-                    <div>PCI Compliant</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Signup Form (Hidden by default) -->
-        <div class="login-card" id="signupCard" style="display: none;">
-            <div class="logo">
-                <span class="logo-icon">💳</span>
-                PayFlow
-            </div>
-            <p class="subtitle">Join thousands of secure users</p>
-
-            <div id="signupErrorMessage" class="error-message"></div>
-            <div id="signupSuccessMessage" class="success-message"></div>
-
-            <form id="signupForm" onsubmit="handleSignup(event)">
-                <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" placeholder="Enter your full name" required>
-                    <span class="input-icon">👤</span>
-                </div>
-
-                <div class="form-group">
-                    <label for="signupEmail">Email Address</label>
-                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
-                    <span class="input-icon">📧</span>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" placeholder="Enter your phone number" required>
-                    <span class="input-icon">📱</span>
-                </div>
-
-                <div class="form-group">
-                    <label for="signupPassword">Create Password</label>
-                    <input type="password" id="signupPassword" placeholder="Create a strong password" required oninput="checkPasswordStrength()">
-                    <span class="input-icon">🔒</span>
-                    <span class="password-toggle" onclick="toggleSignupPassword()">👁️</span>
-                    <div class="strength-meter">
-                        <div class="strength-fill" id="strengthFill"></div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
-                    <span class="input-icon">🔐</span>
-                </div>
-
-                <div class="remember-me">
-                    <div class="checkbox" id="termsCheckbox" onclick="toggleTermsCheckbox()"></div>
-                    <label>I agree to the <a href="#" style="color: #667eea;">Terms of Service</a> and <a href="#" style="color: #667eea;">Privacy Policy</a></label>
-                </div>
-
-                <button type="submit" class="login-btn" id="signupBtn">
-                    Create Account
-                    <div class="spinner"></div>
-                </button>
-            </form>
-
-            <div class="signup-link">
-                Already have an account? 
-                <a href="#" onclick="switchToLogin()">Sign in here</a>
+                <a href="signUp.php">Create one now</a>
             </div>
 
             <div class="security-badges">
@@ -174,6 +96,10 @@
         let isSignupMode = false;
         let rememberMe = false;
         let acceptedTerms = false;
+
+        function enableSubmitBtn(){
+            document.getElementById("loginBtn").disabled=false;
+        }
 
         // Password visibility toggle
         function togglePassword() {
@@ -259,23 +185,7 @@
         }
 
         // Form switching
-        function switchToSignup() {
-            const loginCard = document.querySelector('.login-card:first-of-type');
-            const signupCard = document.getElementById('signupCard');
-            
-            loginCard.style.display = 'none';
-            signupCard.style.display = 'block';
-            isSignupMode = true;
-        }
-
-        function switchToLogin() {
-            const loginCard = document.querySelector('.login-card:first-of-type');
-            const signupCard = document.getElementById('signupCard');
-            
-            signupCard.style.display = 'none';
-            loginCard.style.display = 'block';
-            isSignupMode = false;
-        }
+        
 
         // Form handlers
 

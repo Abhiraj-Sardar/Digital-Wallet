@@ -8,14 +8,15 @@
 <body>
     <?php
         // session_start();
-        $_SESSION['name']=$_POST['name'];
         require_once '../Model/db_connect.php';
-        $uid=$_POST['username'];
         $uname=$_POST['name'];
         $email=$_POST['email'];
         $password=$_POST['password'];
-        
-       
+            $_SESSION['uname']=$uname;
+            $_SESSION['uemail']=$email;
+            $_SESSION['upass']=$password;
+            $_SESSION['amt']=5000.00;
+            $_SESSION['crypto']=0;
 
         try {
             $pdo = new PDO($attr, $user, $pass, $opts);
@@ -24,11 +25,11 @@
         echo "Connection failed: " . $e->getMessage();
         }    
 
-        $rs = "INSERT INTO user VALUES('$uid','$uname','$email','$password',2000.00,0)";
+        $rs = "INSERT INTO user(name, email, password, amount, crypto) VALUES('$uname','$email','$password',5000.00,0)";
         $result = $pdo->query($rs);
 
         
-        header('Location: http://localhost/Digital-Wallet/View/Profile.php');
+        header('Location: http://localhost/Digital-Wallet/View/login.php');
 
     ?>
 </body>

@@ -11,7 +11,7 @@
     <?php 
         include "../View/loader.html"; 
         $cnt=$_GET['cnt'];
-        $tot=$GET['tot'];
+        $tot=$_GET['tot'];
         $uid = $_SESSION['uid'];
         require_once '../Model/db_connect.php';            
         try {
@@ -26,12 +26,16 @@
         $crpt = "update user set crypto = crypto + '$cnt' where id like '$uid'";
         $stmt=$pdo->query($crpt);
         $crptu = $stmt->fetch();
-        
+
+        $ua = "update user set amount = amount - '$tot' where id like '$uid'";
+        $stmt=$pdo->query($ua);
+        $uat = $stmt->fetch();
+
     ?>
     <script>
         setTimeout(()=>{
             location.href= 'http://localhost/Digital-Wallet/View/cryptoStore.php';
-        },2000);
+        },5000);
 
     </script>
 

@@ -3,10 +3,12 @@
 
 <?php
        include "./navbar.php";
-       $uname=$_SESSION['uname'];
+       require_once '../Model/db_connect.php';
+    //    
+        $uname=$_SESSION['uname'];
         $uemail=$_SESSION['uemail'];
         $upass=$_SESSION['upass'];
-       require_once '../Model/db_connect.php';
+       
        try {
             $pdo = new PDO($attr, $user, $pass, $opts);
             // echo "Connection successfull..";
@@ -17,6 +19,9 @@
         $rs = "SELECT * FROM user WHERE email LIKE '$uemail' and password LIKE '$upass'";
         $result = $pdo->query($rs);
         $row = $result->fetch();
+
+        
+
         if($row){
             $_SESSION['uid']=$row['id'];
             $_SESSION['uname']=$row['name'];
@@ -24,10 +29,16 @@
             $_SESSION['upass']=$row['password'];
             $_SESSION['amt']=$row['amount'];
             $_SESSION['crypto']=$row['crypto'];
+           
         }   
         else{
             exit;
         }
+
+        $uid=$_SESSION['uid'];
+        $ts4= "select count(*) as count from transactions where sid like '$uid' or rid like '$uid'";
+        $ts4_result = $pdo->query($ts4);
+        $ts4_row = $ts4_result->fetch();
         
     ?>
 
@@ -35,7 +46,7 @@
 
 $dataPoints = array(
 	array("label"=> "Paygo Coin", "y"=> $_SESSION['amt']),
-	array("label"=> "Transactions", "y"=> 47),
+	array("label"=> "Transactions", "y"=> $ts4_row['count']),
 	array("label"=> "Crypto Buyed", "y"=> $_SESSION['crypto']),
 	array("label"=> "Send", "y"=> 72),
 	array("label"=> "Received", "y"=> 191),
@@ -610,7 +621,7 @@ chart.render();
             </div>
             <div class="stat-card">
                 <i class="fa-solid fa-receipt" style="color: #63E6BE;font-size:32px;"></i>
-                <div class="stat-value" id="totalTransactions">47</div>
+                <div class="stat-value" id="totalTransactions"><?php echo $ts4_row['count'];?></div>
                 <div class="stat-label">Transactions</div>
             </div>
             <div class="stat-card">

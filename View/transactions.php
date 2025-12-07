@@ -1,7 +1,5 @@
 <?php session_start(); 
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -376,11 +374,6 @@
             $ts6= "select sum(amount) as ts_receive from transactions where rid like '$sid' and status=0";
             $ts6_result = $pdo->query($ts6);
             $ts6_row = $ts6_result->fetch();
-
-
-            // $_SESSION['trans']=$ts4_row['count'];
-            // $_SESSION['send']=$ts5_row['ts_send'];
-            // $_SESSION['receive']=$ts6_row['ts_receive'];
         ?>
     <div class="container">
         <div class="header">
