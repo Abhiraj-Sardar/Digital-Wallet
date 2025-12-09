@@ -44,5 +44,8 @@ PayGo is a Digital Payement and Coin Service Application. It is the place where 
 - Buying and Selling Crypto Coins in Real Time
 - Digitalised Payment Services
 
+## Software SnapShot
+![](https://github.com/Abhiraj-Sardar/PayGo-App/blob/master/Output/ProfilePage.png)
+
 
 
