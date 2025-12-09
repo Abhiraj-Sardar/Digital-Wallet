@@ -569,7 +569,7 @@
 
         <div class="main-content" id="mainContent">
             <div class="header">
-                <h1>🚀 Crypto Dashboard</h1>
+                <h1>🚀 Crypto Coin Market</h1>
                 <p>Real-time cryptocurrency market data and insights</p>
             </div>
 
@@ -612,19 +612,6 @@
                     <span class="item-name">Total Bill</span>
                     $<span id='tb' class="item-price">3.50</span>
                 </div>
-                <!-- <div class="receipt-item">
-                    <span class="item-name">Croissant</span>
-                    <span class="item-price">$4.25</span>
-                </div> -->
-                <!-- <div class="receipt-item">
-                    <span class="item-name">Orange Juice</span>
-                    <span class="item-price">$2.99</span>
-                </div>
-                <div class="receipt-item">
-                    <span class="item-name">Muffin - Blueberry</span>
-                    <span class="item-price">$3.75</span>
-                </div> -->
-
                 <div class="receipt-divider"></div>
 
                 <div class="receipt-item">
